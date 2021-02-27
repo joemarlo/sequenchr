@@ -17,6 +17,11 @@ Imports:
     ggplot2,
     tidyr,
     viridis,
-    TraMineR
+    TraMineR,
+    DescTools,
+    dendextend,
+    fpc,
+    scales,
+    shiny
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues

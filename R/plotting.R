@@ -1,4 +1,36 @@
-plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = NULL){
+#' Generates a sequence index plot
+#'
+#' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
+#' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
+#' @param cluster_assignments optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' seq_def_tidy <- tidy_sequence_data(mvad.seq)
+#' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
+#' names(color_mapping) <- alphabet(mvad.seq)
+#' plot_sequence_index(seq_def_tidy, color_mapping)
+#'
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
+#' plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
+plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
+
+  # TODO: write error handling for providing cluster_assignemnts but not n_col_facets
+  # TODO: allow renaming of title and xy labels?
 
   if (is.null(cluster_assignments)){
 
@@ -39,8 +71,36 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
   return(p)
 }
 
-
-plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = NULL){
+#' Generates a sequence state plot
+#'
+#' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
+#' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
+#' @param cluster_assignments optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' seq_def_tidy <- tidy_sequence_data(mvad.seq)
+#' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
+#' names(color_mapping) <- alphabet(mvad.seq)
+#' plot_state(seq_def_tidy, color_mapping)
+#'
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
+#' plot_state(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
+plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
 
   if (is.null(cluster_assignments)){
 
@@ -73,8 +133,36 @@ plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
   return(p)
 }
 
-
-plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = NULL){
+#' Generates a plot of the modal states
+#'
+#' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
+#' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
+#' @param cluster_assignments optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' seq_def_tidy <- tidy_sequence_data(mvad.seq)
+#' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
+#' names(color_mapping) <- alphabet(mvad.seq)
+#' plot_modal(seq_def_tidy, color_mapping)
+#'
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
+#' plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
+plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
 
   if (is.null(cluster_assignments)){
 
@@ -114,6 +202,28 @@ plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 }
 
 
+#' Plot the legend
+#'
+#' Plots just the legend given a list of named oclors
+#'
+#' @param color_mapping a list of named colors
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
+#' names(color_mapping) <- alphabet(mvad.seq)
+#' plot_legend(color_mapping)
 plot_legend <- function(color_mapping){
   p <- dplyr::tibble(value = names(color_mapping)) %>%
     mutate(index = row_number()) %>%
@@ -128,6 +238,30 @@ plot_legend <- function(color_mapping){
 }
 
 
+#' Plot a dendrogram colored by cluster
+#'
+#' Plots a dedrogram where the colors of the segments represent cluster membership
+#'
+#' @param cluster_model a clustering model such as the output from fastcluster::hclust
+#' @param k the number of clusters
+#' @param h the minimum height to plot the segments. A lower height results in decreased performance
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' plot_dendrogram(cluster_model, 5)
 plot_dendrogram <- function(cluster_model, k, h = 100){
 
   # build base dendrogram
@@ -136,7 +270,7 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
     dendextend::set("labels_colors")
 
   # cut off bottom of dendogram for computation performance
-  dend <- cut(dend, h = h)$upper
+  dend <- base::cut(dend, h = h)$upper
   ggd1 <- dendextend::as.ggdend(dend)
 
   # set dashed line for non-cluster segments
@@ -177,6 +311,17 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
 }
 
 
+#' Plot a transition matrix
+#'
+#' Plots a 'heatmap' of a transition matrix
+#'
+#' @param transition_matrix a transition matrix
+#'
+#' @return ggplot object
+#' @export
+#'
+#' @examples
+#' TODO
 plot_transition_matrix <- function(transition_matrix){
 
   # TODO: issue here that labels should be comprehensive regardless of period

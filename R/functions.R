@@ -1,4 +1,36 @@
 
+#' Compute CH index and silhouette width
+#'
+#' Computes the raw and normalized Calinski-Harabasz index and silhouette width for various number of clusters.
+#'
+#' @param dist_matrix a distance matrix
+#' @param cluster_model a clustering model such as the output from fastcluster::hclust
+#' @param k_min the minimum number of clusters to test
+#' @param k_max the maximum number of clusters to test
+#'
+#' @return tibble
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#'
+#' cluster_stats(
+#'  dist_matrix = as.dist(dist_matrix),
+#'  cluster_model = cluster_model,
+#'  k_min = 2,
+#'  k_max = 5
+#' )
+#'
 cluster_stats <- function(dist_matrix, cluster_model, k_min, k_max){
   all_stats <- lapply(k_min:k_max, function(k){
     c_stats <- fpc::cluster.stats(
@@ -22,7 +54,7 @@ cluster_stats <- function(dist_matrix, cluster_model, k_min, k_max){
 #'
 #' Converts the output matrix of TraMineR::seqdef into a tidy tibble
 #'
-#' @param sequence_data
+#' @param sequence_data an object created from TraMineR::seqdef
 #'
 #' @return tibble
 #' @export

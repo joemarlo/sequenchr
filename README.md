@@ -11,7 +11,7 @@ analysis iterations or for whom just prefer a point-and-click interface.
 
 ## Installation
 
-You can install the lastest version sequenchr via:
+You can install the latest version of sequenchr via:
 
 ``` r
 # install.packages("devtools")
@@ -19,8 +19,6 @@ devtools::install_github("joemarlo/sequenchr")
 ```
 
 ## Example
-
-This is a basic example which shows you how to solve a common problem:
 
 ``` r
 library(sequenchr)
