@@ -22,6 +22,7 @@ Imports:
     dendextend,
     fpc,
     scales,
-    shiny
+    shiny,
+    fastcluster
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues

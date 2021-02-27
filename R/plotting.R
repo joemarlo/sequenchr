@@ -39,7 +39,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
       dplyr::ungroup() %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
@@ -57,7 +57,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
       dplyr::ungroup() %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
@@ -265,7 +265,7 @@ plot_legend <- function(color_mapping){
 plot_dendrogram <- function(cluster_model, k, h = 100){
 
   # build base dendrogram
-  dend <- as.dendrogram(cluster_model) %>%
+  dend <- stats::as.dendrogram(cluster_model) %>%
     dendextend::set("branches_k_color", k = k) %>%
     dendextend::set("labels_colors")
 
@@ -282,29 +282,29 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
 
   # set the label positions
   cluster_labels <- ggd1$segments %>%
-    filter(col != 'grey50') %>%
-    group_by(col) %>%
-    summarize(x = mean(x), .groups = 'drop') %>%
-    arrange(x) %>%
-    mutate(label = paste0("Cluster ", 1:k))
+    dplyr::filter(col != 'grey50') %>%
+    dplyr::group_by(col) %>%
+    dplyr::summarize(x = mean(x), .groups = 'drop') %>%
+    dplyr::arrange(x) %>%
+    dplyr::mutate(label = paste0("Cluster ", 1:k))
 
   # plot the dendrograms
   p <- ggd1$segments %>%
-    ggplot() +
-    geom_segment(aes(x = x, y = y, xend = xend, yend = yend),
+    ggplot2::ggplot() +
+    ggplot2::geom_segment(ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
                  color = ggd1$segments$col, linetype = ggd1$segments$linetype,
                  lwd = 0.9, alpha = 0.7) +
-    scale_x_continuous(labels = cluster_labels$label,
+    ggplot2::scale_x_continuous(labels = cluster_labels$label,
                        breaks = cluster_labels$x) +
-    scale_y_continuous(labels = scales::comma_format()) +
-    labs(title = "Dendrogram",
+    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
+    ggplot2::labs(title = "Dendrogram",
          subtitle = 'Helpful subtitle goes here',
          x = NULL,
          y = NULL) +
-    theme(axis.ticks = element_blank(),
-          axis.text.x = element_text(angle = 35, hjust = 1),
-          panel.grid.major.x = element_blank(),
-          panel.grid.minor.x = element_blank(),
+    ggplot2::theme(axis.ticks = ggplot2::element_blank(),
+          axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
+          panel.grid.major.x = ggplot2::element_blank(),
+          panel.grid.minor.x = ggplot2::element_blank(),
           legend.position = 'none')
 
   return(p)
