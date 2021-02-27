@@ -17,8 +17,3 @@ launch_sequenchr(MonteCarlo = 10)
 \description{
 Launches the sequenchr app in the default web browser. Optional covariates_data produces plots of the marginal distributions.
 }
-\examples{
-\dontrun{
-launch_sequenchr()
-}
-}

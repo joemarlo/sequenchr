@@ -9,9 +9,6 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' launch_sequenchr()
-#' }
 launch_sequenchr <- function(MonteCarlo = 10){ #sequence_data, covariates_data = NULL){
 
   # quality checks
@@ -27,7 +24,9 @@ launch_sequenchr <- function(MonteCarlo = 10){ #sequence_data, covariates_data =
 
   # getOption("shiny.launch.browser", TRUE)
 
-  shiny::runApp(system.file("sequenchr", package = "sequenchr"),
+  shiny::shinyOptions(MonteCarlo = MonteCarlo)
+  shiny::runApp(system.file(file.path("sequenchr", "app.R"),
+                            package = "sequenchr"),
                 launch.browser = TRUE)
 
   # shiny::shinyOptions(sequence_data = sequence_data,
