@@ -10,28 +10,25 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.1
 Depends: 
-    shiny
+    shiny (>= 1.5.0)
 Imports: 
-    magrittr,
-    stats,
-    base,
-    dplyr,
-    ggplot2,
-    tidyr,
-    viridis,
-    TraMineR,
-    DescTools,
-    dendextend,
-    fpc,
-    scales,
-    fastcluster,
-    methods,
-    knitr,
-    kableExtra,
-    chorddiag
+    magrittr (>= 1.5),
+    stats (>= 3.6.2),
+    base (>= 3.6.2),
+    dplyr (>= 1.0.0),
+    ggplot2 (>= 3.3.0),
+    tidyr (>= 1.0.2),
+    viridis (>= 0.5.1),
+    TraMineR (>= 2.2.1),
+    dendextend (>= 1.13.2),
+    fpc (>= 2.2.9),
+    scales (>= 1.1.0),
+    fastcluster (>= 1.1.25),
+    methods (>= 3.6.2),
+    knitr (>= 1.27),
+    kableExtra (>= 1.1.0),
+    chorddiag (>= 0.1.3)
 Remotes: 
     github::mattflor/chorddiag
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues
-
-

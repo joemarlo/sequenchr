@@ -81,3 +81,24 @@ tidy_sequence_data <- function(sequence_data){
 
   return(tidy_df)
 }
+
+
+#' Shannon entropy of a vector
+#'
+#' Calculates the Shannon entropy of a categorical vector
+#'
+#' @param x a categorical vector
+#'
+#' @return numeric
+#' @export
+#'
+#' @examples
+#' shannon_entropy(1:10)
+shannon_entropy <- function(x){
+
+  tab <- table(x)
+  prop <- tab / sum(tab)
+  entropy <- -sum(ifelse(prop > 0, prop * log(prop, base = 2), 0))
+
+  return(entropy)
+}

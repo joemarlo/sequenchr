@@ -37,7 +37,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
     # plot the regular sequences without clustering
     p <- seq_def_tidy %>%
       dplyr::group_by(sequenchr_seq_id) %>%
-      dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
+      dplyr::mutate(entropy = shannon_entropy(value)) %>%
       dplyr::ungroup() %>%
       ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
       ggplot2::geom_tile() +
@@ -55,7 +55,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
                 sequenchr_seq_id = 1:length(cluster_assignments)) %>%
       dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
       dplyr::group_by(sequenchr_seq_id) %>%
-      dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
+      dplyr::mutate(entropy = shannon_entropy(value)) %>%
       dplyr::ungroup() %>%
       ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
       ggplot2::geom_tile() +
