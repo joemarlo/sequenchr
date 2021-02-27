@@ -9,6 +9,10 @@
 Sequence analysis tool for applied researchers. Designed for faster
 analysis iterations or for whom just prefer a point-and-click interface.
 
+<p align="center">
+<img src="man/figures/screenshot.png" width=60%>
+</p>
+
 ## Installation
 
 You can install the latest version of sequenchr via:
@@ -58,12 +62,13 @@ cluster_assignments <- stats::cutree(cluster_model, k = 5)
 plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments)
 
 # customize your plots via standard ggplot functions
-ggplot2::theme_set(ggplot2::theme_minimal())
+library(ggplot2)
+theme_set(theme_minimal())
 plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments) +
-  ggplot2::scale_x_continuous(breaks = seq(0, 70, by = 5)) +
-  ggplot2::labs(title = 'My seqI plot',
-                subtitle = 'A helpful subtitle',
-                x = 'Month',
-                fill = 'States',
-                caption = 'Data from McVicar and Anyadike-Danes')
+  scale_x_continuous(breaks = seq(0, 70, by = 5)) +
+  labs(title = 'My seqI plot',
+       subtitle = 'A helpful subtitle',
+       x = 'Month',
+       fill = 'States',
+       caption = 'Data from McVicar and Anyadike-Danes')
 ```

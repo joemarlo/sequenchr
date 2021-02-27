@@ -7,6 +7,7 @@
 #'
 #' @return
 #' @export
+#' @import shiny
 #'
 #' @examples
 #' library(TraMineR)
