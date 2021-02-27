@@ -27,9 +27,10 @@ Imports:
     fastcluster,
     methods,
     knitr,
-    kableExtra
+    kableExtra,
+    chorddiag
 Remotes: 
-    mattflor/chorddiag
+    github::mattflor/chorddiag
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues
 
