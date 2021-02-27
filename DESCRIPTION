@@ -18,3 +18,5 @@ Imports:
     tidyr,
     viridis,
     TraMineR
+URL: https://github.com/joemarlo/sequenchr
+BugReports: https://github.com/joemarlo/sequenchr/issues
