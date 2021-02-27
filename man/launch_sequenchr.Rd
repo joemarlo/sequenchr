@@ -4,7 +4,7 @@
 \alias{launch_sequenchr}
 \title{Launches the sequenchr Shiny app}
 \usage{
-launch_sequenchr(MonteCarlo = 10)
+launch_sequenchr(sequence_data, covariates_data = NULL)
 }
 \arguments{
 \item{sequence_data}{an object created from TraMineR::seqdef}
@@ -15,5 +15,17 @@ launch_sequenchr(MonteCarlo = 10)
 
 }
 \description{
-Launches the sequenchr app in the default web browser. Optional covariates_data produces plots of the marginal distributions.
+Launches the sequenchr app in the default web browser. Optional covariates_data adds a tab containing plots of the marginal distributions of these covariates.
+}
+\examples{
+library(TraMineR)
+data(mvad)
+seqstatl(mvad[, 17:86])
+mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+                   "training")
+mvad.labels <- c("employment", "further education", "higher education",
+                 "joblessness", "school", "training")
+mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
+                   labels = mvad.labels, xtstep = 6)
+#launch_sequenchr(mvad.seq)
 }

@@ -3,7 +3,7 @@ Type: Package
 Title: EDA Tools for Sequence Analysis
 Version: 0.1.0
 Author: Joseph Marlo
-Maintainer: Joseph Marlo <joe.marlo.09@gmail.com>
+Maintainer: Joseph Marlo <jpm770@nyu.edu>
 Description: Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer a point-and-click interface.
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -22,8 +22,13 @@ Imports:
     dendextend,
     fpc,
     scales,
-    shiny,
     fastcluster,
-    methods
+    methods,
+    knitr,
+    kableExtra
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues
+Remotes: 
+    mattflor/chorddiag
+Depends: 
+    shiny

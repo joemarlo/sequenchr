@@ -29,7 +29,7 @@
 #' plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
 
-  # TODO: write error handling for providing cluster_assignemnts but not n_col_facets
+  # TODO: write error handling for providing cluster_assignments but not n_col_facets
   # TODO: allow renaming of title and xy labels?
 
   if (is.null(cluster_assignments)){
