@@ -36,14 +36,14 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
 
     # plot the regular sequences without clustering
     p <- seq_def_tidy %>%
-      group_by(sequenchr_seq_id) %>%
-      mutate(entropy = DescTools::Entropy(table(value))) %>%
-      ungroup() %>%
-      ggplot(aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
-      geom_tile() +
-      scale_fill_manual(values = color_mapping) +
-      scale_y_discrete(labels = NULL, breaks = NULL) +
-      labs(title = "All sequences sorted by entropy",
+      dplyr::group_by(sequenchr_seq_id) %>%
+      dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
+      dplyr::ungroup() %>%
+      ggplot2::ggplot(ggplot2::aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
+      ggplot2::labs(title = "All sequences sorted by entropy",
            x = 'Period',
            y = 'Sequence',
            fill = NULL)
@@ -51,18 +51,18 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
   } else {
 
     # plot the sequences with clusters
-    p <- tibble(cluster = cluster_assignments,
+    p <- dplyr::tibble(cluster = cluster_assignments,
                 sequenchr_seq_id = 1:length(cluster_assignments)) %>%
-      right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
-      group_by(sequenchr_seq_id) %>%
-      mutate(entropy = DescTools::Entropy(table(value))) %>%
-      ungroup() %>%
-      ggplot(aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
-      geom_tile() +
-      scale_fill_manual(values = color_mapping) +
-      scale_y_discrete(labels = NULL, breaks = NULL) +
-      facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
-      labs(title = "All sequences by cluster sorted by entropy",
+      dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
+      dplyr::group_by(sequenchr_seq_id) %>%
+      dplyr::mutate(entropy = DescTools::Entropy(table(value))) %>%
+      dplyr::ungroup() %>%
+      ggplot2::ggplot(ggplot2::aes(x = period, y = reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::geom_tile() +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
+      ggplot2::facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
+      ggplot2::labs(title = "All sequences by cluster sorted by entropy",
            x = 'Period',
            y = 'Sequence',
            fill = NULL)
