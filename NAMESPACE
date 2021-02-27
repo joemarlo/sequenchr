@@ -2,6 +2,7 @@
 
 export("%>%")
 export(cluster_stats)
+export(launch_sequenchr)
 export(plot_dendrogram)
 export(plot_legend)
 export(plot_modal)
