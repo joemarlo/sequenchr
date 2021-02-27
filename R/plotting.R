@@ -106,10 +106,10 @@ plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 
     # plot without clustering
     p <- seq_def_tidy %>%
-      ggplot(aes(x = period, fill = value)) +
-      geom_bar(width = 1) +
-      scale_fill_manual(values = color_mapping) +
-      labs(title = "State distributions",
+      ggplot2::ggplot(ggplot2::aes(x = period, fill = value)) +
+      ggplot2::geom_bar(width = 1) +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::labs(title = "State distributions",
            x = 'Period',
            y = 'Frequency',
            fill = NULL)
@@ -117,14 +117,14 @@ plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
   } else {
 
     # plot with clustering
-    p <- tibble(cluster = cluster_assignments,
+    p <- dplyr::tibble(cluster = cluster_assignments,
                 sequenchr_seq_id = 1:length(cluster_assignments)) %>%
-      right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
-      ggplot(aes(x = period, fill = value)) +
-      geom_bar(width = 1) +
-      scale_fill_manual(values = color_mapping) +
-      facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
-      labs(title = "State distributions by cluster",
+      dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
+      ggplot2::ggplot(ggplot2::aes(x = period, fill = value)) +
+      ggplot2::geom_bar(width = 1) +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
+      ggplot2::labs(title = "State distributions by cluster",
            x = 'Period',
            y = 'Frequency',
            fill = NULL)
@@ -168,30 +168,30 @@ plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 
     # plot without clustering
     p <- seq_def_tidy %>%
-      count(value, period) %>%
-      group_by(period) %>%
-      filter(n == max(n)) %>%
-      ggplot(aes(x = period, y = n, fill = value)) +
-      geom_col() +
-      scale_fill_manual(values = color_mapping) +
-      labs(title = "Modal activity per period",
+      dplyr::count(value, period) %>%
+      dplyr::group_by(period) %>%
+      dplyr::filter(n == max(n)) %>%
+      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = value)) +
+      ggplot2::geom_col() +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::labs(title = "Modal activity per period",
            caption = "Ties are shown as stacked bars",
            x = "Period",
            y = 'Frequency',
            fill = NULL)
   } else {
     # plot with cluster
-    p <- tibble(cluster = cluster_assignments,
+    p <- dplyr::tibble(cluster = cluster_assignments,
                 sequenchr_seq_id = 1:length(cluster_assignments)) %>%
-      right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
-      count(cluster, value, period) %>%
-      group_by(cluster, period) %>%
-      filter(n == max(n)) %>%
-      ggplot(aes(x = period, y = n, fill = value)) +
-      geom_col() +
-      scale_fill_manual(values = color_mapping) +
-      facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
-      labs(title = "Modal activity per period by cluster",
+      dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
+      dplyr::count(cluster, value, period) %>%
+      dplyr::group_by(cluster, period) %>%
+      dplyr::filter(n == max(n)) %>%
+      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = value)) +
+      ggplot2::geom_col() +
+      ggplot2::scale_fill_manual(values = color_mapping) +
+      ggplot2::facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
+      ggplot2::labs(title = "Modal activity per period by cluster",
            caption = "Ties are shown as stacked bars",
            x = "Period",
            y = 'Frequency',
@@ -226,13 +226,13 @@ plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 #' plot_legend(color_mapping)
 plot_legend <- function(color_mapping){
   p <- dplyr::tibble(value = names(color_mapping)) %>%
-    mutate(index = row_number()) %>%
-    ggplot(aes(x=1, y = reorder(value, -index), fill = value)) +
-    geom_tile(color = 'white', size = 3) +
-    scale_fill_manual(values = color_mapping) +
-    scale_x_continuous(labels = NULL) +
-    labs(x = NULL, y = NULL) +
-    theme(legend.position = 'none')
+    dplyr::mutate(index = dplyr::row_number()) %>%
+    ggplot2::ggplot(ggplot2::aes(x=1, y = stats::reorder(value, -index), fill = value)) +
+    ggplot2::geom_tile(color = 'white', size = 3) +
+    ggplot2::scale_fill_manual(values = color_mapping) +
+    ggplot2::scale_x_continuous(labels = NULL) +
+    ggplot2::labs(x = NULL, y = NULL) +
+    ggplot2::theme(legend.position = 'none')
 
   return(p)
 }
@@ -321,23 +321,23 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
 #' @export
 #'
 #' @examples
-#' TODO
+#' #TODO
 plot_transition_matrix <- function(transition_matrix){
 
   # TODO: issue here that labels should be comprehensive regardless of period
   # TODO: add clustering
   p <- transition_matrix %>%
-    pivot_longer(cols = -current, names_to = "previous", values_to = "n") %>%
-    ggplot(aes(x = previous, y = current, fill = n, label = round(n, 3))) +
-    geom_tile() +
-    geom_text(color = 'grey90') +
-    scale_fill_viridis_c() +
-    labs(title = "Transition matrix",
+    tidyr::pivot_longer(cols = -current, names_to = "previous", values_to = "n") %>%
+    ggplot2::ggplot(ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
+    ggplot2::geom_tile() +
+    ggplot2::geom_text(color = 'grey90') +
+    ggplot2::scale_fill_viridis_c() +
+    ggplot2::labs(title = "Transition matrix",
          subtitle = "A helpful subtitle",
          x = "\nFrom state",
          y = 'To state',
          fill = 'Transition rate') +
-    theme(axis.text.x = element_text(angle = 35, hjust = 1))
+    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1))
 
   return(p)
 }

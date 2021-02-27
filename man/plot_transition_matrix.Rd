@@ -16,5 +16,5 @@ ggplot object
 Plots a 'heatmap' of a transition matrix
 }
 \examples{
-TODO
+#TODO
 }

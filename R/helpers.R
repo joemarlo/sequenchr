@@ -32,7 +32,7 @@
 #' )
 #'
 cluster_stats <- function(dist_matrix, cluster_model, k_min, k_max){
-  all_stats <- lapply(k_min:k_max, function(k){
+  all_stats <- base::lapply(k_min:k_max, function(k){
     c_stats <- fpc::cluster.stats(
       d = dist_matrix,
       clustering = stats::cutree(cluster_model, k = k),
