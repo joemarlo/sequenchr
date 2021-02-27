@@ -1,11 +1,20 @@
 Package: sequenchr
 Type: Package
-Title: What the Package Does (Title Case)
+Title: EDA Tools for Sequence Analysis
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Joseph Marlo
+Maintainer: Joseph Marlo <joe.marlo.09@gmail.com>
+Description: Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer a point-and-click interface.
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+RoxygenNote: 7.1.1
+Imports: 
+    magrittr,
+    stats,
+    base,
+    dplyr,
+    ggplot2,
+    tidyr,
+    viridis,
+    TraMineR
