@@ -8,6 +8,7 @@
 #' @return
 #' @export
 #' @import shiny
+#' @importFrom chorddiag renderChorddiag chorddiag
 #'
 #' @examples
 #' library(TraMineR)
