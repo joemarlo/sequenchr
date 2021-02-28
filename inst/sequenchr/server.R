@@ -1,6 +1,5 @@
 shinyServer(function(input, output, session) {
 
-
   # pre-processing ----------------------------------------------------------
 
   # set ggplot theme
@@ -279,16 +278,6 @@ shinyServer(function(input, output, session) {
 
   # compute and plot silhouette width
   observeEvent(input$clustering_button_separation, {
-    # get optimal cluster sizes by calculating silhouette width
-    # store$s_width <- NbClust::NbClust(
-    #     data = NULL,
-    #     diss = as.dist(store$dist_matrix),
-    #     distance = NULL,
-    #     method = 'ward.D2',
-    #     max.nc = input$clustering_slider_separation_range[2],
-    #     min.nc = input$clustering_slider_separation_range[1],
-    #     index = 'silhouette'
-    # )
 
     store$separation_metrics <- cluster_stats(
       dist_matrix = as.dist(store$dist_matrix),
@@ -296,11 +285,6 @@ shinyServer(function(input, output, session) {
       k_min = input$clustering_slider_separation_range[1],
       k_max = input$clustering_slider_separation_range[2]
     )
-
-    # update slider with best k value
-    # updateSelectInput(session = session,
-    #                   inputId = 'clustering_slider_n_clusters',
-    #                   selected = store$s_width$Best.nc[['Number_clusters']])
 
     # remove and add silhouette plot tab
     removeTab(inputId = 'plotting_tabs',
@@ -371,17 +355,7 @@ shinyServer(function(input, output, session) {
   })
 
 
-
   # chord plot --------------------------------------------------------------
-
-  # # render the d3 plot
-  # output$explore_d3_chord <- renderD3({
-  #     # r2d3(data = runif(5, 0, input$bar_max),
-  #     #      script = file.path('d3_plots', 'chord.js')
-  #     r2d3(data = matrix(round(runif(input$bar_max, 1, 10000)),
-  #                        ncol = 4, nrow = 4),
-  #          script = file.path('d3_plots', 'chord.js'))
-  # })
 
   # transition matrix
   transition_matrix <- reactive({
@@ -396,7 +370,7 @@ shinyServer(function(input, output, session) {
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::group_split() %>%
       lapply(X = ., FUN = function(df){
-        df %>% dplyr::add_row(sequenchr_seq_id = NA, value = NA, period = NA)
+         dplyr::add_row(df, sequenchr_seq_id = NA, value = NA, period = NA)
       }) %>%
       dplyr::bind_rows()
 
@@ -428,7 +402,7 @@ shinyServer(function(input, output, session) {
     TRATE_mat <- trans_mat[[2]]
 
     # create the color vector
-    states_included <- base::intersect(names(color_mapping), rownames(TRATE_mat)) #unique(freq_data$value))
+    states_included <- base::intersect(names(color_mapping), rownames(TRATE_mat))
     colors_chord <- as.vector(color_mapping[states_included])
 
     # plot the chord diagram

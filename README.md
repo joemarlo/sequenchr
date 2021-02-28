@@ -71,5 +71,17 @@ plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments) +
        subtitle = 'A helpful subtitle',
        x = 'Month',
        fill = 'States',
-       caption = 'Data from McVicar and Anyadike-Danes')
+       caption = 'Data from McVicar and Anyadike-Danes') +
+  theme(legend.position = 'bottom')
 ```
+
+## Development todo
+
+-   Write vignettes
+-   Write unit testing (!!!)
+-   Review and refine function documentation
+-   Review dependencies
+-   Remove color\_mapping requirement from plotting\_\* functions
+-   Add citations
+-   Add suggestion of data limit - random sample
+-   Add console messages when clustering/separation metrics
