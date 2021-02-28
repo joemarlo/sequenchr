@@ -93,7 +93,7 @@ tidy_sequence_data <- function(sequence_data){
 #' @export
 #'
 #' @examples
-#' shannon_entropy(1:10)
+#' shannon_entropy(c('A', 'A', 'B', 'C', 'A', 'C'))
 shannon_entropy <- function(x){
 
   tab <- table(x)

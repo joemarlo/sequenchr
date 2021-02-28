@@ -34,7 +34,7 @@ mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
                    "training")
 mvad.labels <- c("employment", "further education", "higher education",
                  "joblessness", "school", "training")
-mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
                    labels = mvad.labels, xtstep = 6)
 seq_def_tidy <- tidy_sequence_data(mvad.seq)
 color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))

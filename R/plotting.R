@@ -16,7 +16,7 @@
 #'                    "training")
 #' mvad.labels <- c("employment", "further education", "higher education",
 #'                  "joblessness", "school", "training")
-#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' seq_def_tidy <- tidy_sequence_data(mvad.seq)
 #' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
@@ -89,7 +89,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
 #'                    "training")
 #' mvad.labels <- c("employment", "further education", "higher education",
 #'                  "joblessness", "school", "training")
-#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' seq_def_tidy <- tidy_sequence_data(mvad.seq)
 #' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
@@ -151,7 +151,7 @@ plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 #'                    "training")
 #' mvad.labels <- c("employment", "further education", "higher education",
 #'                  "joblessness", "school", "training")
-#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' seq_def_tidy <- tidy_sequence_data(mvad.seq)
 #' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
@@ -219,7 +219,7 @@ plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 #'                    "training")
 #' mvad.labels <- c("employment", "further education", "higher education",
 #'                  "joblessness", "school", "training")
-#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
 #' names(color_mapping) <- alphabet(mvad.seq)
@@ -240,7 +240,7 @@ plot_legend <- function(color_mapping){
 
 #' Plot a dendrogram colored by cluster
 #'
-#' Plots a dedrogram where the colors of the segments represent cluster membership
+#' Plots a dendrogram where the colors of the segments represent cluster membership. Note that the cluster labels may not match the cluster labels in other sequenchr::plot_* functions.
 #'
 #' @param cluster_model a clustering model such as the output from fastcluster::hclust
 #' @param k the number of clusters
@@ -257,7 +257,7 @@ plot_legend <- function(color_mapping){
 #'                    "training")
 #' mvad.labels <- c("employment", "further education", "higher education",
 #'                  "joblessness", "school", "training")
-#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 #' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')

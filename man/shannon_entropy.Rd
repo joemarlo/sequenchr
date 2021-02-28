@@ -16,5 +16,5 @@ numeric
 Calculates the Shannon entropy of a categorical vector
 }
 \examples{
-shannon_entropy(1:10)
+shannon_entropy(c('A', 'A', 'B', 'C', 'A', 'C'))
 }
