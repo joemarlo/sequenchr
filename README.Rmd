@@ -18,7 +18,7 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer a point-and-click interface. Supplements the powerful [TraMineR](http://traminer.unige.ch/) package.
+Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer an interactive interface. Supplements the powerful [TraMineR](http://traminer.unige.ch/) package.
 
 <p align="center">
 <img src="man/figures/screenshot.png" width=70%>

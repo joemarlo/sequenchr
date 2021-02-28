@@ -7,7 +7,7 @@
 <!-- badges: end -->
 
 Sequence analysis tool for applied researchers. Designed for faster
-analysis iterations or for whom just prefer a point-and-click interface.
+analysis iterations or for whom just prefer an interactive interface.
 Supplements the powerful [TraMineR](http://traminer.unige.ch/) package.
 
 <p align="center">

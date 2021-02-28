@@ -36,7 +36,6 @@ launch_sequenchr <- function(sequence_data, covariates_data = NULL){
 
   shiny::shinyOptions(sequence_data = sequence_data,
                       covariates_data = covariates_data)
-  shiny::runApp(system.file(file.path("sequenchr", "app.R"),
-                            package = "sequenchr"),
+  shiny::runApp(system.file("sequenchr", package = "sequenchr"),
                 launch.browser = TRUE)
 }
