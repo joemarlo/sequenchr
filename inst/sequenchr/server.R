@@ -157,6 +157,10 @@ shinyServer(function(input, output, session) {
   # cluster the data
   observeEvent(input$clustering_button_cluster, {
 
+    # message to console
+    message(paste0("1. Computing distance matrix with method ",
+                   input$clustering_select_distanceMethod))
+
     # compute the distance matrix
     if (input$clustering_select_distanceMethod == 'DHD'){
       store$dist_matrix <- TraMineR::seqdist(
@@ -181,27 +185,17 @@ shinyServer(function(input, output, session) {
       )
     }
 
+    # message to console
+    message("2. Clustering the data")
+
     # cluster the data
     store$cluster_model <- fastcluster::hclust(
       d = as.dist(store$dist_matrix),
       method = input$clustering_select_clustering_method
     )
 
-    # remove and add dendrogram tab
-    removeTab(inputId = 'plotting_tabs',
-              target = 'Dendrogram')
-    insertTab(
-      inputId = 'plotting_tabs',
-      target = 'Legend',
-      position = 'after',
-      select = TRUE,
-      tab = tabPanel(
-        title = 'Dendrogram',
-        br(),
-        plotOutput(outputId = 'clustering_plot_dendrogram',
-                   height = 600)
-      )
-    )
+    # message to console
+    message("3. Clustering finished")
 
     # render the clustering UI
     output$clustering_UI <- renderUI({
@@ -225,6 +219,22 @@ shinyServer(function(input, output, session) {
       downloadButton(outputId = 'clustering_button_download',
                      label = 'Download cluster assignments')
     })
+
+    # remove and add dendrogram tab
+    removeTab(inputId = 'plotting_tabs',
+              target = 'Dendrogram')
+    insertTab(
+      inputId = 'plotting_tabs',
+      target = 'Legend',
+      position = 'after',
+      select = TRUE,
+      tab = tabPanel(
+        title = 'Dendrogram',
+        br(),
+        plotOutput(outputId = 'clustering_plot_dendrogram',
+                   height = 600)
+      )
+    )
   })
 
   # returns the current cluster assignments
@@ -236,11 +246,12 @@ shinyServer(function(input, output, session) {
 
     # get the cluster assignments
     hcl_k <- input$clustering_slider_n_clusters
+    if (is.null(hcl_k)) hcl_k <- 2
     cluster_assignments <- stats::cutree(store$cluster_model, k = hcl_k)
 
     # reorder clusters to match dendrogram left to right
     cluster_to_dend_mapping <- dplyr::tibble(cluster = cluster_assignments[store$cluster_model$order]) %>%
-      tidyr::nest(-cluster) %>%
+      tidyr::nest(data = -cluster) %>%
       dplyr::mutate(cluster_dend = dplyr::row_number()) %>%
       tidyr::unnest(data) %>%
       dplyr::distinct()
@@ -265,13 +276,14 @@ shinyServer(function(input, output, session) {
     validate(need(is(store$cluster_model, 'hclust'),
                   'Cluster the data first'))
 
-    # retrieve the current cluster model and k cluster value
-    cluster <- store$cluster_model
-    k <- input$clustering_slider_n_clusters
-    h <- input$clustering_slider_dendrogram_depth
+    # default hcl_k to 2
+    hcl_k <- input$clustering_slider_n_clusters
+    if (is.null(hcl_k)) hcl_k <- 2
 
     # plot it
-    p <- plot_dendrogram(cluster, k, h)
+    p <- plot_dendrogram(cluster_model = store$cluster_model,
+                         k = hcl_k,
+                         h = input$clustering_slider_dendrogram_depth)
 
     return(p)
   })
@@ -279,6 +291,10 @@ shinyServer(function(input, output, session) {
   # compute and plot silhouette width
   observeEvent(input$clustering_button_separation, {
 
+    # message to console
+    message('1. Calculating separation metrics')
+
+    # compute cluster stats
     store$separation_metrics <- cluster_stats(
       dist_matrix = as.dist(store$dist_matrix),
       cluster_model = store$cluster_model,
@@ -301,6 +317,9 @@ shinyServer(function(input, output, session) {
                    height = 600)
       )
     )
+
+    # message to console
+    message('Separation metrics finished')
   })
 
   # plot the silhouette width
