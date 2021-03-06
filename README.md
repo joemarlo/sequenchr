@@ -50,7 +50,7 @@ launch_sequenchr(mvad.seq)
 seq_def_tidy <- tidy_sequence_data(mvad.seq)
 
 # plot the sequence index
-plot_sequence_index(seq_def_tidy, color_mapping)
+plot_sequence_index(seq_def_tidy)
 
 # cluster the data
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
@@ -81,3 +81,4 @@ plot_sequence_index(seq_def_tidy, cluster_assignments = cluster_assignments) +
 -   Review dependencies
 -   Add suggestion of data limit - random sample
 -   Rename `value` column in `tidy_sequence_data` output
+-   Remove subtitles from plot\_\* functions
