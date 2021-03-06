@@ -1,7 +1,7 @@
 #' Generates a sequence index plot
 #'
 #' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
-#' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
+#' @param color_mapping optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.
 #' @param cluster_assignments optional. A vector of cluster assignments
 #' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
 #'
@@ -27,10 +27,12 @@
 #' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
+plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
 
   # TODO: write error handling for providing cluster_assignments but not n_col_facets
   # TODO: allow renaming of title and xy labels?
+
+  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 
@@ -74,7 +76,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
 #' Generates a sequence state plot
 #'
 #' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
-#' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
+#' @param color_mapping optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.
 #' @param cluster_assignments optional. A vector of cluster assignments
 #' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
 #'
@@ -100,7 +102,9 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping, cluster_assignments
 #' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_state(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
+plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
+
+  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 
@@ -162,7 +166,9 @@ plot_state <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, 
 #' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_modal <- function(seq_def_tidy, color_mapping, cluster_assignments = NULL, n_col_facets = 1){
+plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
+
+  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 

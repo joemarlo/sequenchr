@@ -2,8 +2,7 @@ Package: sequenchr
 Type: Package
 Title: EDA Tools for Sequence Analysis
 Version: 0.1.0
-Author: Joseph Marlo
-Maintainer: Joseph Marlo <jpm770@nyu.edu>
+Authors@R: person('Joseph', 'Marlo', email = 'jpm770@nyu.edu', role = c("aut", "cre"))
 Description: Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer a point-and-click interface.
 License: MIT + file LICENSE
 Encoding: UTF-8

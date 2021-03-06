@@ -79,7 +79,8 @@ shinyUI(
         uiOutput(outputId = 'clustering_button_UI'),
         br(),
         h4("Citations"),
-        p("....lorem ipsum..."),
+        p("Run the below R command for the latest citations:"),
+        HTML("&nbsp;&nbsp;&nbsp;&nbsp; lapply(c('sequenchr', 'TraMineR', 'tidyverse', 'dendextend', 'fpc', 'fastcluster', 'chorddiag'), citation)"),
         HTML('</details><br>')
       ),
       mainPanel(

@@ -6,7 +6,7 @@
 \usage{
 plot_sequence_index(
   seq_def_tidy,
-  color_mapping,
+  color_mapping = NULL,
   cluster_assignments = NULL,
   n_col_facets = 1
 )
@@ -14,7 +14,7 @@ plot_sequence_index(
 \arguments{
 \item{seq_def_tidy}{a tidy tibble generated from sequenchr::tidy_sequence_data}
 
-\item{color_mapping}{a list of named colors where the names match the alphabet of the original sequence data}
+\item{color_mapping}{optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.}
 
 \item{cluster_assignments}{optional. A vector of cluster assignments}
 

@@ -6,7 +6,7 @@
 \usage{
 plot_modal(
   seq_def_tidy,
-  color_mapping,
+  color_mapping = NULL,
   cluster_assignments = NULL,
   n_col_facets = 1
 )

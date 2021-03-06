@@ -12,7 +12,7 @@ launch_sequenchr(sequence_data, covariates_data = NULL)
 \item{covariates_data}{optional. a dataframe with the same number of rows as sequence_data}
 }
 \value{
-
+launches the sequenchr Shiny app
 }
 \description{
 Launches the sequenchr app in the default web browser. Optional covariates_data adds a tab containing plots of the marginal distributions of these covariates.

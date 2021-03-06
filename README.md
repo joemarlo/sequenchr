@@ -46,10 +46,8 @@ launch_sequenchr(mvad.seq)
 
 # Or use the plotting functions directly ....
 
-# tidy the data and compute color palette
+# tidy the data
 seq_def_tidy <- tidy_sequence_data(mvad.seq)
-color_mapping <- viridis::viridis_pal()(length(alphabet(mvad.seq)))
-names(color_mapping) <- alphabet(mvad.seq)
 
 # plot the sequence index
 plot_sequence_index(seq_def_tidy, color_mapping)
@@ -60,12 +58,12 @@ cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2
 cluster_assignments <- stats::cutree(cluster_model, k = 5)
 
 # plot the sequence index by cluster
-plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments)
+plot_sequence_index(seq_def_tidy, cluster_assignments = cluster_assignments)
 
 # customize your plots via standard ggplot functions
 library(ggplot2)
 theme_set(theme_minimal())
-plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments) +
+plot_sequence_index(seq_def_tidy, cluster_assignments = cluster_assignments) +
   scale_x_continuous(breaks = seq(0, 70, by = 5)) +
   labs(title = 'My seqI plot',
        subtitle = 'A helpful subtitle',
@@ -81,7 +79,5 @@ plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments) +
 -   Write unit testing (!!!)
 -   Review and refine function documentation
 -   Review dependencies
--   Remove color\_mapping requirement from plot\_\* functions
--   Add citations
 -   Add suggestion of data limit - random sample
--   Add console messages when clustering/separation metrics
+-   Rename `value` column in `tidy_sequence_data` output

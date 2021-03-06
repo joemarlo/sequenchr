@@ -5,7 +5,7 @@
 #' @param sequence_data an object created from TraMineR::seqdef
 #' @param covariates_data optional. a dataframe with the same number of rows as sequence_data
 #'
-#' @return
+#' @return launches the sequenchr Shiny app
 #' @export
 #' @import shiny
 #' @importFrom chorddiag renderChorddiag chorddiag
