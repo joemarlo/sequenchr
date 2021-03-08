@@ -8,7 +8,6 @@
 #' @return launches the sequenchr Shiny app
 #' @export
 #' @import shiny
-#' @importFrom chorddiag renderChorddiag chorddiag
 #'
 #' @examples
 #' library(TraMineR)

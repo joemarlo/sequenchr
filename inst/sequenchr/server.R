@@ -374,7 +374,7 @@ shinyServer(function(input, output, session) {
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::group_split() %>%
       lapply(X = ., FUN = function(df){
-         dplyr::add_row(df, sequenchr_seq_id = NA, value = NA, period = NA)
+        dplyr::add_row(df, sequenchr_seq_id = NA, value = NA, period = NA)
       }) %>%
       dplyr::bind_rows()
 
@@ -397,30 +397,6 @@ shinyServer(function(input, output, session) {
     return(list(TRATE_filled, TRATE_filled_mat))
   })
 
-  # render the chord plot
-  output$explore_plot_chord <- chorddiag::renderChorddiag({
-
-    # get the transition matrix
-    trans_mat <- transition_matrix()
-    freq_data <- trans_mat[[1]]
-    TRATE_mat <- trans_mat[[2]]
-
-    # create the color vector
-    states_included <- base::intersect(names(color_mapping), rownames(TRATE_mat))
-    colors_chord <- as.vector(color_mapping[states_included])
-
-    # plot the chord diagram
-    p <- chorddiag::chorddiag(
-      data = TRATE_mat,
-      groupColors = colors_chord,
-      groupnamePadding = 20,
-      groupnameFontsize = 12,
-      precision = 4
-    )
-
-    return(p)
-  })
-
   # render the transition plot
   output$explore_plot_matrix <- renderPlot({
 
@@ -438,5 +414,49 @@ shinyServer(function(input, output, session) {
                     inputId = 'plotting_slider_chord',
                     max = ncol(sequence_data),
                     value = c(1, ncol(sequence_data)))
+
+  # only render the chord plot if package is installed; otherwise render a message
+  if ('chorddiag' %in% rownames(installed.packages())){
+
+    # render the chord plot
+    output$explore_plot_chord <- chorddiag::renderChorddiag({
+
+      # get the transition matrix
+      trans_mat <- transition_matrix()
+      freq_data <- trans_mat[[1]]
+      TRATE_mat <- trans_mat[[2]]
+
+      # create the color vector
+      states_included <- base::intersect(names(color_mapping), rownames(TRATE_mat))
+      colors_chord <- as.vector(color_mapping[states_included])
+
+      # plot the chord diagram
+      p <- chorddiag::chorddiag(
+        data = TRATE_mat,
+        groupColors = colors_chord,
+        groupnamePadding = 20,
+        groupnameFontsize = 12,
+        precision = 4
+      )
+
+      return(p)
+    })
+
+    output$explore_chord_UI <- renderUI({
+      tagList(
+        h5("The outside arc (node) represents the frequency of the states"),
+        h5("The connection between the nodes is the transition rates between the two states"),
+        br(),
+        chorddiag::chorddiagOutput(
+          outputId = 'explore_plot_chord',
+          height = 700
+        )
+      )
+    })
+  } else {
+    output$explore_chord_UI <- renderUI({
+      HTML("chorddiag package not detected. Install via devtools::install_github('mattflor/chorddiag')")
+    })
+  }
 
 })

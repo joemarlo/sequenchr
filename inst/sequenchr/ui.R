@@ -129,22 +129,15 @@ shinyUI(
               id = 'explore_tabs',
               type = 'tabs',
               tabPanel(
-                title = "Chord plot",
-                br(),
-                # h3("Transition between states"),
-                h5("The outside arc (node) represents the frequency of the states"),
-                h5("The connection between the nodes is the transition rates between the two states"),
-                br(),
-                chorddiag::chorddiagOutput(
-                  outputId = 'explore_plot_chord',
-                  height = 700
-                )
-              ),
-              tabPanel(
                 title = 'Matrix',
                 br(),
                 plotOutput(outputId = 'explore_plot_matrix',
                            height = 700)
+              ),
+              tabPanel(
+                title = "Chord plot",
+                br(),
+                uiOutput(outputId = 'explore_chord_UI')
               )
             )
           ),

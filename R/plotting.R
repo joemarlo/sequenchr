@@ -302,11 +302,9 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
                  lwd = 0.9, alpha = 0.7) +
     ggplot2::scale_x_continuous(labels = cluster_labels$label,
                        breaks = cluster_labels$x) +
-    ggplot2::scale_y_continuous(labels = scales::comma_format()) +
     ggplot2::labs(title = "Dendrogram",
-         subtitle = 'Helpful subtitle goes here',
-         x = NULL,
-         y = NULL) +
+                  x = NULL,
+                  y = NULL) +
     ggplot2::theme(axis.ticks = ggplot2::element_blank(),
           axis.text.x = ggplot2::element_text(angle = 35, hjust = 1),
           panel.grid.major.x = ggplot2::element_blank(),
@@ -341,7 +339,6 @@ plot_transition_matrix <- function(transition_matrix){
     ggplot2::geom_text(color = 'grey90') +
     ggplot2::scale_fill_viridis_c() +
     ggplot2::labs(title = "Transition matrix",
-         subtitle = "A helpful subtitle",
          x = "\nFrom state",
          y = 'To state',
          fill = 'Transition rate') +
