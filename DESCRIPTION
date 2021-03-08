@@ -31,3 +31,6 @@ Remotes:
     github::mattflor/chorddiag
 URL: https://github.com/joemarlo/sequenchr
 BugReports: https://github.com/joemarlo/sequenchr/issues
+VignetteBuilder: knitr
+Suggests: 
+    rmarkdown

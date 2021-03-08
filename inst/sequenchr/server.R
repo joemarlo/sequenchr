@@ -244,29 +244,14 @@ shinyServer(function(input, output, session) {
     validate(need(is(store$cluster_model, 'hclust'),
                   'Cluster the data first'))
 
-    # get the cluster assignments
-    hcl_k <- input$clustering_slider_n_clusters
-    if (is.null(hcl_k)) hcl_k <- 2
-    cluster_assignments <- stats::cutree(store$cluster_model, k = hcl_k)
+    # set k number of clusters
+    k <- input$clustering_slider_n_clusters
+    if (is.null(k)) k <- 2
 
-    # reorder clusters to match dendrogram left to right
-    cluster_to_dend_mapping <- dplyr::tibble(cluster = cluster_assignments[store$cluster_model$order]) %>%
-      tidyr::nest(data = -cluster) %>%
-      dplyr::mutate(cluster_dend = dplyr::row_number()) %>%
-      tidyr::unnest(data) %>%
-      dplyr::distinct()
-    cluster_sorted <- dplyr::tibble(cluster = cluster_assignments) %>%
-      dplyr::left_join(cluster_to_dend_mapping, by = 'cluster') %>%
-      dplyr::pull(cluster_dend)
+    # get cluster cluster assignments
+    cluster_assignments <- cluster_labels(store$cluster_model, k = k)
 
-    # add label
-    cluster_ns <- base::table(cluster_sorted)
-    cluster_names <- factor(
-      cluster_sorted,
-      labels = paste("Cluster", 1:hcl_k, " | n = ", cluster_ns)
-    )
-
-    return(cluster_names)
+    return(cluster_assignments)
   })
 
   # plot the dendrogram

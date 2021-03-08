@@ -102,3 +102,55 @@ shannon_entropy <- function(x){
 
   return(entropy)
 }
+
+
+#' Label clusters consistently
+#'
+#' Returns cluster labels that match the clusters in sequenchr::plot_dendrogram branches left-to-right.
+#'
+#' @param .model an hclust model
+#' @param k the number of clusters
+#'
+#' @return a factor
+#' @export
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
+#'                    labels = mvad.labels, xtstep = 6)
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#'
+#' cluster_labels(cluster_model, k = 5)
+cluster_labels <- function(.model, k){
+
+  if (isFALSE(is(.model, "hclust"))) stop('.model must be a hclust model produced by stats::hclust or fastcluster::hclust')
+
+  # raw cluster labels
+  cluster_labels_raw <- stats::cutree(.model, k = k)
+
+  # reorder clusters to match dendrogram left to right
+  cluster_to_dend_mapping <- dplyr::tibble(cluster = cluster_labels_raw[.model$order]) %>%
+    tidyr::nest(data = -cluster) %>%
+    dplyr::mutate(cluster_dend = dplyr::row_number()) %>%
+    tidyr::unnest(data) %>%
+    dplyr::distinct()
+  cluster_sorted <- dplyr::tibble(cluster = cluster_labels_raw) %>%
+    dplyr::left_join(cluster_to_dend_mapping, by = 'cluster') %>%
+    dplyr::pull(cluster_dend)
+
+  # add label
+  cluster_ns <- base::table(cluster_sorted)
+  cluster_labels <- factor(
+    cluster_sorted,
+    labels = paste("Cluster", 1:k, " | n = ", cluster_ns)
+  )
+
+  return(cluster_labels)
+}

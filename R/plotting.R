@@ -30,9 +30,8 @@
 plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
 
   # TODO: write error handling for providing cluster_assignments but not n_col_facets
-  # TODO: allow renaming of title and xy labels?
 
-  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 
@@ -104,7 +103,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
 #' plot_state(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
 
-  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 
@@ -168,7 +167,7 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #' plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
 
-  if(is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
 
   if (is.null(cluster_assignments)){
 
@@ -332,6 +331,8 @@ plot_transition_matrix <- function(transition_matrix){
 
   # TODO: issue here that labels should be comprehensive regardless of period
   # TODO: add clustering
+
+  # plot it
   p <- transition_matrix %>%
     tidyr::pivot_longer(cols = -current, names_to = "previous", values_to = "n") %>%
     ggplot2::ggplot(ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
