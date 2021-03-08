@@ -7,7 +7,7 @@
 plot_dendrogram(cluster_model, k, h = 100)
 }
 \arguments{
-\item{cluster_model}{a clustering model such as the output from fastcluster::hclust}
+\item{cluster_model}{a clustering model such as the output from hclust}
 
 \item{k}{the number of clusters}
 
@@ -30,6 +30,6 @@ mvad.labels <- c("employment", "further education", "higher education",
 mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
                    labels = mvad.labels, xtstep = 6)
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 plot_dendrogram(cluster_model, 5)
 }

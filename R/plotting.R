@@ -24,7 +24,7 @@
 #' plot_sequence_index(seq_def_tidy, color_mapping)
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
@@ -52,8 +52,8 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
   } else {
 
     # plot the sequences with clusters
-    p <- dplyr::tibble(cluster = cluster_assignments,
-                sequenchr_seq_id = 1:length(cluster_assignments)) %>%
+    p <- data.frame(cluster = cluster_assignments,
+                    sequenchr_seq_id = 1:length(cluster_assignments)) %>%
       dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::mutate(entropy = shannon_entropy(value)) %>%
@@ -98,7 +98,7 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
 #' plot_state(seq_def_tidy, color_mapping)
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_state(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
@@ -108,8 +108,8 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
   if (is.null(cluster_assignments)){
 
     # plot without clustering
-    p <- seq_def_tidy %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, fill = value)) +
+    p <- ggplot2::ggplot(data = seq_def_tidy,
+                         ggplot2::aes(x = period, fill = value)) +
       ggplot2::geom_bar(width = 1) +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::labs(title = "State distributions",
@@ -162,7 +162,7 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #' plot_modal(seq_def_tidy, color_mapping)
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' cluster_assignments <- stats::cutree(cluster_model, k = 5)
 #' plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
@@ -230,9 +230,11 @@ plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #' names(color_mapping) <- alphabet(mvad.seq)
 #' plot_legend(color_mapping)
 plot_legend <- function(color_mapping){
-  p <- dplyr::tibble(value = names(color_mapping)) %>%
-    dplyr::mutate(index = dplyr::row_number()) %>%
-    ggplot2::ggplot(ggplot2::aes(x=1, y = stats::reorder(value, -index), fill = value)) +
+  color_df <- data.frame(value = names(color_mapping))
+  color_df$index <- 1:nrow(color_df)
+
+  p <- ggplot2::ggplot(data = color_df,
+                       ggplot2::aes(x=1, y = stats::reorder(value, -index), fill = value)) +
     ggplot2::geom_tile(color = 'white', size = 3) +
     ggplot2::scale_fill_manual(values = color_mapping) +
     ggplot2::scale_x_continuous(labels = NULL) +
@@ -247,7 +249,7 @@ plot_legend <- function(color_mapping){
 #'
 #' Plots a dendrogram where the colors of the segments represent cluster membership. Note that the cluster labels may not match the cluster labels in other sequenchr::plot_* functions.
 #'
-#' @param cluster_model a clustering model such as the output from fastcluster::hclust
+#' @param cluster_model a clustering model such as the output from hclust
 #' @param k the number of clusters
 #' @param h the minimum height to plot the segments. A lower height results in decreased performance
 #'
@@ -265,16 +267,16 @@ plot_legend <- function(color_mapping){
 #' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
 #'                    labels = mvad.labels, xtstep = 6)
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #' plot_dendrogram(cluster_model, 5)
 plot_dendrogram <- function(cluster_model, k, h = 100){
 
   # build base dendrogram
-  dend <- stats::as.dendrogram(cluster_model) %>%
-    dendextend::set("branches_k_color", k = k) %>%
-    dendextend::set("labels_colors")
+  dend <- stats::as.dendrogram(cluster_model)
+  dend <- dendextend::set(dend, "branches_k_color", k = k)
+  dend <- dendextend::set(dend, "labels_colors")
 
-  # cut off bottom of dendogram for computation performance
+  # cut off bottom of dendrogram for computation performance
   dend <- base::cut(dend, h = h)$upper
   ggd1 <- dendextend::as.ggdend(dend)
 
@@ -294,8 +296,7 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
     dplyr::mutate(label = paste0("Cluster ", 1:k))
 
   # plot the dendrograms
-  p <- ggd1$segments %>%
-    ggplot2::ggplot() +
+  p <- ggplot2::ggplot(data = ggd1$segments) +
     ggplot2::geom_segment(ggplot2::aes(x = x, y = y, xend = xend, yend = yend),
                  color = ggd1$segments$col, linetype = ggd1$segments$linetype,
                  lwd = 0.9, alpha = 0.7) +
@@ -333,9 +334,9 @@ plot_transition_matrix <- function(transition_matrix){
   # TODO: add clustering
 
   # plot it
-  p <- transition_matrix %>%
-    tidyr::pivot_longer(cols = -current, names_to = "previous", values_to = "n") %>%
-    ggplot2::ggplot(ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
+  dat_pivoted <- tidyr::pivot_longer(transition_matrix, cols = -current, names_to = "previous", values_to = "n")
+  p <-ggplot2::ggplot(data = dat_pivoted,
+                      ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
     ggplot2::geom_tile() +
     ggplot2::geom_text(color = 'grey90') +
     ggplot2::scale_fill_viridis_c() +

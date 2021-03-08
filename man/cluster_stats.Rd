@@ -9,7 +9,7 @@ cluster_stats(dist_matrix, cluster_model, k_min, k_max)
 \arguments{
 \item{dist_matrix}{a distance matrix}
 
-\item{cluster_model}{a clustering model such as the output from fastcluster::hclust}
+\item{cluster_model}{a clustering model such as the output from hclust}
 
 \item{k_min}{the minimum number of clusters to test}
 
@@ -32,7 +32,7 @@ mvad.labels <- c("employment", "further education", "higher education",
 mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
                    labels = mvad.labels, xtstep = 6)
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 
 cluster_stats(
  dist_matrix = as.dist(dist_matrix),

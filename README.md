@@ -23,6 +23,11 @@ You can install the latest version of sequenchr via:
 devtools::install_github("joemarlo/sequenchr")
 ```
 
+<!-- ## Vignette -->
+<!-- ```{r vignette, eval=FALSE} -->
+<!-- vignette('sequenchr') -->
+<!-- ``` -->
+
 ## Example
 
 ``` r
@@ -75,10 +80,10 @@ plot_sequence_index(seq_def_tidy, cluster_assignments = cluster_labels) +
 
 ## Development to-do
 
--   Write vignettes
 -   Write unit testing (!!!)
 -   Review and refine function documentation
 -   Review dependencies
+-   Remove chordiag?
 -   Add suggestion of data limit - random sample
 -   Rename `value` column in `tidy_sequence_data` output
 -   Remove subtitles from plot\_\* functions

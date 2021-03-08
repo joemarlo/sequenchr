@@ -189,7 +189,7 @@ shinyServer(function(input, output, session) {
     message("2. Clustering the data")
 
     # cluster the data
-    store$cluster_model <- fastcluster::hclust(
+    store$cluster_model <- hclust(
       d = as.dist(store$dist_matrix),
       method = input$clustering_select_clustering_method
     )

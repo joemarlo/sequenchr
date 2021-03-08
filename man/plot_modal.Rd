@@ -42,7 +42,7 @@ names(color_mapping) <- alphabet(mvad.seq)
 plot_modal(seq_def_tidy, color_mapping)
 
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 cluster_assignments <- stats::cutree(cluster_model, k = 5)
 plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
 }

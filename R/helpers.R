@@ -4,7 +4,7 @@
 #' Computes the raw and normalized Calinski-Harabasz index and silhouette width for various number of clusters.
 #'
 #' @param dist_matrix a distance matrix
-#' @param cluster_model a clustering model such as the output from fastcluster::hclust
+#' @param cluster_model a clustering model such as the output from hclust
 #' @param k_min the minimum number of clusters to test
 #' @param k_max the maximum number of clusters to test
 #'
@@ -22,7 +22,7 @@
 #' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
 #'                    labels = mvad.labels, xtstep = 6)
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #'
 #' cluster_stats(
 #'  dist_matrix = as.dist(dist_matrix),
@@ -125,12 +125,12 @@ shannon_entropy <- function(x){
 #' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, # states = mvad.scodes,
 #'                    labels = mvad.labels, xtstep = 6)
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-#' cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #'
 #' cluster_labels(cluster_model, k = 5)
 cluster_labels <- function(.model, k){
 
-  if (isFALSE(is(.model, "hclust"))) stop('.model must be a hclust model produced by stats::hclust or fastcluster::hclust')
+  if (isFALSE(inherits(.model, "hclust"))) stop('.model must be a hclust model produced by stats::hclust or fastcluster::hclust')
 
   # raw cluster labels
   cluster_labels_raw <- stats::cutree(.model, k = k)
