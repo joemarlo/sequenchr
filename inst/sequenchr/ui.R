@@ -7,7 +7,7 @@ shinyUI(
     HTML('<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Barcode+128+Text&display=swap">'),
 
     # load custom CSS file
-    includeCSS(file.path("www", "custom_css.css")),
+    includeCSS(file.path("www", "sequenchr.css")),
 
     # set top left title
     titlePanel(

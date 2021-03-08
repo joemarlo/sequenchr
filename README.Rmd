@@ -33,13 +33,6 @@ You can install the latest version of sequenchr via:
 devtools::install_github("joemarlo/sequenchr", build_vignettes = TRUE)
 ```
 
-<!-- ## Vignette -->
-
-<!-- ```{r vignette, eval=FALSE} -->
-<!-- vignette('sequenchr') -->
-<!-- ``` -->
-
-
 ## Example
 
 ```{r example, eval=FALSE}
@@ -88,6 +81,12 @@ plot_sequence_index(seq_def_tidy, cluster_labels = cluster_labels) +
        fill = 'States',
        caption = 'Data from McVicar and Anyadike-Danes') +
   theme(legend.position = 'bottom')
+```
+
+See the vignette for more information:
+
+```{r vignette, eval=FALSE}
+vignette('sequenchr')
 ```
 
 ## Development to-do

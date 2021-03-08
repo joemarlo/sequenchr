@@ -29,8 +29,6 @@
 #' plot_sequence_index(seq_def_tidy, color_mapping, cluster_labels = cluster_labels)
 plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_labels = NULL, n_col_facets = 1){
 
-  # TODO: write error handling for providing cluster_labels but not n_col_facets
-
   if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$state)))
 
   if (is.null(cluster_labels)){

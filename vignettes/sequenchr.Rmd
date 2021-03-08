@@ -50,6 +50,7 @@ launch_sequenchr(sequence_data = mvad.seq)
 
 The sequenchr app displays plotting of the state sequences and hierarchical clustering. Distance methods, clustering methods, and seperation metrics can be specified on the left side. Cluster labels can also be downloaded as a .csv if you wish to use them directly within R.
 
+TODO: refine covariates plotting
 Passing a dataframe to the optional argument `covariates_data` within `sequenchr::launch_sequenchr` will visualize the covariates and split them based on cluster membership. The covariates data is matched to the `sequence_data` via row position so both contain the same number of rows.
 
 ```{r covariates, eval=FALSE, include=TRUE}
