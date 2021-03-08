@@ -154,3 +154,58 @@ cluster_labels <- function(.model, k){
 
   return(cluster_labels)
 }
+
+
+#' Create a bootstrap html table
+#'
+#' Similar to knitr::kable and kableExtra::kable_styling without the dependencies.
+#'
+#' @param .rownames vector of length three
+#' @param .values vector of length three
+#'
+#' @return html code for a 2x3 table
+#' @export
+#'
+#' @examples
+#' my_names <- c('n sequences', 'n unique seqences', 'n periods')
+#' my_values <- c(50, 20, 10)
+#' bootstrap_table(my_names, my_values)
+bootstrap_table <- function(.rownames, .values){
+
+  if (length(.rownames) != 3 | length(.values) !=3) stop(".rownames and .values must be length 3")
+
+  # create html table
+  html_table <- paste0(
+    '<table class="table table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+    <tbody>
+    <tr>
+    <td style="text-align:left;">',
+    .rownames[1],
+    '</td>
+    <td style="text-align:right;">',
+    .values[1],
+    '</td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">',
+    .rownames[2],
+    '</td>
+    <td style="text-align:right;">',
+    .values[2],
+    '</td>
+    </tr>
+    <tr>
+    <td style="text-align:left;">',
+    .rownames[3],
+    '</td>
+    <td style="text-align:right;">',
+    .values[3],
+    '</td>
+    </tr>
+    </tbody>
+    </table>
+  '
+  )
+
+  return(html_table)
+}

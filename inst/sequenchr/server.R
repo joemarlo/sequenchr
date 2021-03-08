@@ -30,15 +30,15 @@ shinyServer(function(input, output, session) {
 
   # summary table
   output$summary_table <- renderText({
-    data.frame(
-      n_sequences = nrow(sequence_data),
-      n_unique_sequences = nrow(dplyr::distinct(as.data.frame(sequence_data))),
-      n_periods = ncol(sequence_data)
-    ) %>%
-      t() %>%
-      `rownames<-`(c('n sequences', 'n unique sequences', 'n periods')) %>%
-      knitr::kable(digits = 2, format = 'html') %>%
-      kableExtra::kable_styling(bootstrap_options = c("hover", "condensed"))
+
+    row_names <- c("n sequences", "n unique sequences", "n periods")
+    row_values <- c(nrow(sequence_data),
+                    nrow(dplyr::distinct(as.data.frame(sequence_data))),
+                    ncol(sequence_data))
+    row_values <- round(row_values, 2)
+    html_table <- bootstrap_table(row_names, row_values)
+
+    return(html_table)
   })
 
 
