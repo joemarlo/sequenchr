@@ -3,7 +3,7 @@ Type: Package
 Title: EDA Tools for Sequence Analysis
 Version: 0.1.0
 Authors@R: person('Joseph', 'Marlo', email = 'jpm770@nyu.edu', role = c("aut", "cre"))
-Description: Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer a point-and-click interface.
+Description: Sequence analysis tool for applied researchers. Designed for faster analysis iterations or for whom just prefer an interactive interface.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -12,12 +12,12 @@ Depends:
     R (>= 3.6),
     shiny (>= 1.5.0)
 Imports: 
-    base (>= 3.6.2),
-    stats (>= 3.6.2),
+    base (>= 3.6),
+    stats (>= 3.6),
     TraMineR (>= 2.2.1),
     ggplot2 (>= 3.3.0),
-    tidyr (>= 1.0.2),
     dplyr (>= 1.0.0),
+    tidyr (>= 1.0.2),
     magrittr (>= 1.5),
     viridis (>= 0.5.1),
     dendextend (>= 1.13.2),

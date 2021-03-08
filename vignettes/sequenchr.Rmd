@@ -44,8 +44,8 @@ mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet, states = mvad.scodes,
 launch_sequenchr(sequence_data = mvad.seq)
 ```
 
-<p align="center">
-<img src="screenshot.png" width=90%>
+<p align="left">
+<img src="screenshot.png" width=80%>
 </p>
 
 The sequenchr app displays plotting of the state sequences and hierarchical clustering. Distance methods, clustering methods, and seperation metrics can be specified on the left side. Cluster labels can also be downloaded as a .csv if you wish to use them directly within R.
@@ -107,15 +107,17 @@ names(color_mapping) <- alphbt
 # plot it
 plot_sequence_index(seq_def_tidy, color_mapping = color_mapping)
 plot_modal(seq_def_tidy, color_mapping = color_mapping)
+```
+```{r legend, fig.height=3, fig.width=1.5}
 # plot just the legend
 plot_legend(color_mapping)
 ```
 
 ### Managing cluster labels between dendrogram and plot_* functions
 
-Often the clusters produced by dendrograms have different labels than those produced by `stats::cutree` resulting in different cluster labels for `sequenchr::plot_dendrogram` and other `sequenchr::plot_*` functions. This is mitigated by using `sequenchr::cluster_labels` to cut the tree into k clusters. The resulting numbered labels match the dendrogram labels left-to-right.
+Often the clusters produced by dendrograms have different labels than those produced by `stats::cutree` resulting in different cluster labels for `sequenchr::plot_dendrogram` and other `sequenchr::plot_*` functions. This is mitigated by using `sequenchr::label_clusters` to cut the tree into k clusters. The resulting numbered labels match the dendrogram labels left-to-right.
 
-```{r dendrogram, fig.height=4, fig.width=6}
+```{r dendrogram, fig.height=3, fig.width=6}
 # cluster the data
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
@@ -123,11 +125,12 @@ cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2
 # plot the dendrogram
 plot_dendrogram(cluster_model, k = 5)
 # get the cluster labels
-cluster_labels <- cluster_labels(cluster_model, k = 5)
-
+cluster_labels <- label_clusters(cluster_model, k = 5)
+```
+```{r clusters, fig.height=8, fig.width=6}
 # pass those labels to plot_* functions
 plot_sequence_index(seq_def_tidy,
                     color_mapping = color_mapping,
-                    cluster_assignments = cluster_labels)
+                    cluster_labels = cluster_labels)
 ```
 

@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
       p <- plot_sequence_index(
         seq_def_tidy = tidy_data,
         color_mapping = color_mapping,
-        cluster_assignments = cluster_assignments(),
+        cluster_labels = label_clusters_reactive(),
         n_col_facets = input$clustering_slider_facet_ncol
       )
     }
@@ -81,7 +81,7 @@ shinyServer(function(input, output, session) {
       p <- plot_state(
         seq_def_tidy = tidy_data,
         color_mapping = color_mapping,
-        cluster_assignments = cluster_assignments(),
+        cluster_labels = label_clusters_reactive(),
         n_col_facets = input$clustering_slider_facet_ncol
       )
     }
@@ -99,7 +99,7 @@ shinyServer(function(input, output, session) {
       p <- plot_modal(
         seq_def_tidy = tidy_data,
         color_mapping = color_mapping,
-        cluster_assignments = cluster_assignments(),
+        cluster_labels = label_clusters_reactive(),
         n_col_facets = input$clustering_slider_facet_ncol
       )
     }
@@ -117,15 +117,15 @@ shinyServer(function(input, output, session) {
 
       # plot without clustering
       p <- tidy_cov_data %>%
-        ggplot2::ggplot(ggplot2::aes(x = value, group = name)) +
+        ggplot2::ggplot(ggplot2::aes(x = state, group = name)) +
         ggplot2::geom_density()
 
     } else {
       # plot with clustering
-      p <- dplyr::tibble(cluster = cluster_assignments(),
-                         sequenchr_seq_id = 1:length(cluster_assignments())) %>%
+      p <- dplyr::tibble(cluster = label_clusters_reactive(),
+                         sequenchr_seq_id = 1:length(label_clusters_reactive())) %>%
         dplyr::right_join(tidy_cov_data, by = 'sequenchr_seq_id') %>%
-        ggplot2::ggplot(ggplot2::aes(x = value, group = name)) +
+        ggplot2::ggplot(ggplot2::aes(x = state, group = name)) +
         ggplot2::geom_density() +
         ggplot2::facet_wrap( ~ cluster,
                              scales = 'free_y',
@@ -238,7 +238,7 @@ shinyServer(function(input, output, session) {
   })
 
   # returns the current cluster assignments
-  cluster_assignments <- reactive({
+  label_clusters_reactive <- reactive({
 
     # stop here if clustering hasn't been run yet
     validate(need(is(store$cluster_model, 'hclust'),
@@ -249,9 +249,9 @@ shinyServer(function(input, output, session) {
     if (is.null(k)) k <- 2
 
     # get cluster cluster assignments
-    cluster_assignments <- cluster_labels(store$cluster_model, k = k)
+    cluster_labels <- label_clusters(.model = store$cluster_model, k = k)
 
-    return(cluster_assignments)
+    return(cluster_labels)
   })
 
   # plot the dendrogram
@@ -342,7 +342,7 @@ shinyServer(function(input, output, session) {
 
     # dataframe of clusters to download
     content <- function(file) {
-      cluster_assignments() %>%
+      label_clusters_reactive() %>%
         as.data.frame() %>%
         dplyr::mutate(row = dplyr::row_number(),
                       cluster = sub("  \\|.*", "", `.`)) %>%
@@ -367,25 +367,25 @@ shinyServer(function(input, output, session) {
     # filter the data to the periods specfiied by the input slider
     # add NA filler rows after each group before calculating transition matrix
     # this prevents end of day looping back to beginning of day for next group
-    freq_data <- tidy_data%>%
+    freq_data <- tidy_data %>%
       dplyr::filter(period >= input$plotting_slider_chord[1],
                     period <= input$plotting_slider_chord[2]) %>%
-      dplyr::mutate(value = as.character(value)) %>%
+      dplyr::mutate(state = as.character(state)) %>%
       dplyr::group_by(sequenchr_seq_id) %>%
       dplyr::group_split() %>%
       lapply(X = ., FUN = function(df){
-        dplyr::add_row(df, sequenchr_seq_id = NA, value = NA, period = NA)
+        dplyr::add_row(df, sequenchr_seq_id = NA, state = NA, period = NA)
       }) %>%
       dplyr::bind_rows()
 
     # calculate transition matrix
     n <- nrow(freq_data)
-    TRATE_mat <- base::table(data.frame(previous = freq_data$value[1:(n-1)],
-                                        current = freq_data$value[2:n]))
+    TRATE_mat <- base::table(data.frame(previous = freq_data$state[1:(n-1)],
+                                        current = freq_data$state[2:n]))
     TRATE_mat <- TRATE_mat / sum(TRATE_mat)
 
     # ensure matrix contains all the states (b/c above filters may remove some)
-    unique_states <- unique(tidy_data$value) %>% as.vector()
+    unique_states <- unique(tidy_data$state) %>% as.vector()
     TRATE_filled <- tidyr::crossing(previous = unique_states, current = unique_states) %>%
       dplyr::left_join(dplyr::as_tibble(TRATE_mat),
                        by = c('previous', 'current')) %>%

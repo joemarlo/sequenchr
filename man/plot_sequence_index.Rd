@@ -7,7 +7,7 @@
 plot_sequence_index(
   seq_def_tidy,
   color_mapping = NULL,
-  cluster_assignments = NULL,
+  cluster_labels = NULL,
   n_col_facets = 1
 )
 }
@@ -16,9 +16,9 @@ plot_sequence_index(
 
 \item{color_mapping}{optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.}
 
-\item{cluster_assignments}{optional. A vector of cluster assignments}
+\item{cluster_labels}{optional. A vector of cluster assignments}
 
-\item{n_col_facets}{optional. If cluster_assignments is provided then the number of facet columns}
+\item{n_col_facets}{optional. If cluster_labels is provided then the number of facet columns}
 }
 \value{
 ggplot object
@@ -43,6 +43,6 @@ plot_sequence_index(seq_def_tidy, color_mapping)
 
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
-cluster_assignments <- stats::cutree(cluster_model, k = 5)
-plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
+cluster_labels <- stats::cutree(cluster_model, k = 5)
+plot_sequence_index(seq_def_tidy, color_mapping, cluster_labels = cluster_labels)
 }

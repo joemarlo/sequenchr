@@ -2,8 +2,8 @@
 #'
 #' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
 #' @param color_mapping optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.
-#' @param cluster_assignments optional. A vector of cluster assignments
-#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#' @param cluster_labels optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_labels is provided then the number of facet columns
 #'
 #' @return ggplot object
 #' @export
@@ -25,22 +25,22 @@
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 #' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
-#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
-#' plot_sequence_index(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
+#' cluster_labels <- stats::cutree(cluster_model, k = 5)
+#' plot_sequence_index(seq_def_tidy, color_mapping, cluster_labels = cluster_labels)
+plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_labels = NULL, n_col_facets = 1){
 
-  # TODO: write error handling for providing cluster_assignments but not n_col_facets
+  # TODO: write error handling for providing cluster_labels but not n_col_facets
 
-  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$state)))
 
-  if (is.null(cluster_assignments)){
+  if (is.null(cluster_labels)){
 
     # plot the regular sequences without clustering
     p <- seq_def_tidy %>%
       dplyr::group_by(sequenchr_seq_id) %>%
-      dplyr::mutate(entropy = shannon_entropy(value)) %>%
+      dplyr::mutate(entropy = shannon_entropy(state)) %>%
       dplyr::ungroup() %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = state)) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
@@ -52,13 +52,13 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
   } else {
 
     # plot the sequences with clusters
-    p <- data.frame(cluster = cluster_assignments,
-                    sequenchr_seq_id = 1:length(cluster_assignments)) %>%
+    p <- data.frame(cluster = cluster_labels,
+                    sequenchr_seq_id = 1:length(cluster_labels)) %>%
       dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
       dplyr::group_by(sequenchr_seq_id) %>%
-      dplyr::mutate(entropy = shannon_entropy(value)) %>%
+      dplyr::mutate(entropy = shannon_entropy(state)) %>%
       dplyr::ungroup() %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = stats::reorder(sequenchr_seq_id, entropy), fill = state)) +
       ggplot2::geom_tile() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::scale_y_discrete(labels = NULL, breaks = NULL) +
@@ -76,8 +76,8 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
 #'
 #' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
 #' @param color_mapping optional. A list of named colors where the names match the alphabet of the original sequence data. Useful for ensuring consistent legends across plots.
-#' @param cluster_assignments optional. A vector of cluster assignments
-#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#' @param cluster_labels optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_labels is provided then the number of facet columns
 #'
 #' @return ggplot object
 #' @export
@@ -99,17 +99,17 @@ plot_sequence_index <- function(seq_def_tidy, color_mapping = NULL, cluster_assi
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 #' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
-#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
-#' plot_state(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
+#' cluster_labels <- stats::cutree(cluster_model, k = 5)
+#' plot_state(seq_def_tidy, color_mapping, cluster_labels = cluster_labels)
+plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_labels = NULL, n_col_facets = 1){
 
-  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$state)))
 
-  if (is.null(cluster_assignments)){
+  if (is.null(cluster_labels)){
 
     # plot without clustering
     p <- ggplot2::ggplot(data = seq_def_tidy,
-                         ggplot2::aes(x = period, fill = value)) +
+                         ggplot2::aes(x = period, fill = state)) +
       ggplot2::geom_bar(width = 1) +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::labs(title = "State distributions",
@@ -120,10 +120,10 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
   } else {
 
     # plot with clustering
-    p <- dplyr::tibble(cluster = cluster_assignments,
-                sequenchr_seq_id = 1:length(cluster_assignments)) %>%
+    p <- dplyr::tibble(cluster = cluster_labels,
+                sequenchr_seq_id = 1:length(cluster_labels)) %>%
       dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, fill = state)) +
       ggplot2::geom_bar(width = 1) +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
@@ -140,8 +140,8 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #'
 #' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
 #' @param color_mapping a list of named colors where the names match the alphabet of the original sequence data
-#' @param cluster_assignments optional. A vector of cluster assignments
-#' @param n_col_facets optional. If cluster_assignments is provided then the number of facet columns
+#' @param cluster_labels optional. A vector of cluster assignments
+#' @param n_col_facets optional. If cluster_labels is provided then the number of facet columns
 #'
 #' @return ggplot object
 #' @export
@@ -163,20 +163,20 @@ plot_state <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #'
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 #' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
-#' cluster_assignments <- stats::cutree(cluster_model, k = 5)
-#' plot_modal(seq_def_tidy, color_mapping, cluster_assignments = cluster_assignments)
-plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments = NULL, n_col_facets = 1){
+#' cluster_labels <- stats::cutree(cluster_model, k = 5)
+#' plot_modal(seq_def_tidy, color_mapping, cluster_labels = cluster_labels)
+plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_labels = NULL, n_col_facets = 1){
 
-  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$value)))
+  if (is.null(color_mapping)) color_mapping <- viridis::viridis_pal()(length(unique(seq_def_tidy$state)))
 
-  if (is.null(cluster_assignments)){
+  if (is.null(cluster_labels)){
 
     # plot without clustering
     p <- seq_def_tidy %>%
-      dplyr::count(value, period) %>%
+      dplyr::count(state, period) %>%
       dplyr::group_by(period) %>%
       dplyr::filter(n == max(n)) %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = state)) +
       ggplot2::geom_col() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::labs(title = "Modal activity per period",
@@ -186,13 +186,13 @@ plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
            fill = NULL)
   } else {
     # plot with cluster
-    p <- dplyr::tibble(cluster = cluster_assignments,
-                sequenchr_seq_id = 1:length(cluster_assignments)) %>%
+    p <- dplyr::tibble(cluster = cluster_labels,
+                sequenchr_seq_id = 1:length(cluster_labels)) %>%
       dplyr::right_join(seq_def_tidy, by = 'sequenchr_seq_id') %>%
-      dplyr::count(cluster, value, period) %>%
+      dplyr::count(cluster, state, period) %>%
       dplyr::group_by(cluster, period) %>%
       dplyr::filter(n == max(n)) %>%
-      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = value)) +
+      ggplot2::ggplot(ggplot2::aes(x = period, y = n, fill = state)) +
       ggplot2::geom_col() +
       ggplot2::scale_fill_manual(values = color_mapping) +
       ggplot2::facet_wrap(~cluster, scales = 'free_y', ncol = n_col_facets) +
@@ -230,11 +230,11 @@ plot_modal <- function(seq_def_tidy, color_mapping = NULL, cluster_assignments =
 #' names(color_mapping) <- alphabet(mvad.seq)
 #' plot_legend(color_mapping)
 plot_legend <- function(color_mapping){
-  color_df <- data.frame(value = names(color_mapping))
+  color_df <- data.frame(state = names(color_mapping))
   color_df$index <- 1:nrow(color_df)
 
   p <- ggplot2::ggplot(data = color_df,
-                       ggplot2::aes(x=1, y = stats::reorder(value, -index), fill = value)) +
+                       ggplot2::aes(x=1, y = stats::reorder(state, -index), fill = state)) +
     ggplot2::geom_tile(color = 'white', size = 3) +
     ggplot2::scale_fill_manual(values = color_mapping) +
     ggplot2::scale_x_continuous(labels = NULL) +

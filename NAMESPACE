@@ -2,8 +2,8 @@
 
 export("%>%")
 export(bootstrap_table)
-export(cluster_labels)
 export(cluster_stats)
+export(label_clusters)
 export(launch_sequenchr)
 export(plot_dendrogram)
 export(plot_legend)

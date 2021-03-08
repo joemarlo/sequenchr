@@ -33,6 +33,11 @@ launch_sequenchr <- function(sequence_data, covariates_data = NULL){
     if (isFALSE(is_right_size)) stop("covariates_data must be same number of rows as sequence_data")
   }
 
+  # data limit suggestion
+  # TODO: is there a bette heuristic?
+  if (nrow(sequence_data) * ncol(sequence_data) > 1e6) message("Consider taking a random sample of the data to increase performance")
+
+  # pass the data to Shiny and launch the app
   shiny::shinyOptions(sequence_data = sequence_data,
                       covariates_data = covariates_data)
   shiny::runApp(system.file("sequenchr", package = "sequenchr"),

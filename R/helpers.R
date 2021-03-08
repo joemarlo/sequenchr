@@ -75,9 +75,9 @@ tidy_sequence_data <- function(sequence_data){
     dplyr::as_tibble() %>%
     stats::setNames(1:ncol(sequence_data)) %>%
     dplyr::mutate(sequenchr_seq_id = dplyr::row_number()) %>%
-    tidyr::pivot_longer(cols = base::setdiff(colnames(.), "sequenchr_seq_id")) %>%
-    dplyr::mutate(period = as.numeric(name)) %>%
-    dplyr::select(-name)
+    tidyr::pivot_longer(cols = base::setdiff(colnames(.), "sequenchr_seq_id"),
+                        names_to = 'period', values_to = 'state') %>%
+    dplyr::mutate(period = as.numeric(period))
 
   return(tidy_df)
 }
@@ -127,8 +127,8 @@ shannon_entropy <- function(x){
 #' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
 #' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 #'
-#' cluster_labels(cluster_model, k = 5)
-cluster_labels <- function(.model, k){
+#' label_clusters(cluster_model, k = 5)
+label_clusters <- function(.model, k){
 
   if (isFALSE(inherits(.model, "hclust"))) stop('.model must be a hclust model produced by stats::hclust or fastcluster::hclust')
 
