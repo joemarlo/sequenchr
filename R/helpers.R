@@ -209,3 +209,105 @@ bootstrap_table <- function(.rownames, .values){
 
   return(html_table)
 }
+
+#' Calculate the transition matrix of states
+#'
+#' Calculate the transition rates between states. If cluster_labels are provided then transition rates are calculated by cluster.
+#'
+#' @param seq_def_tidy a tidy tibble generated from sequenchr::tidy_sequence_data
+#' @param period_min the minimum period to include in the transition calculation
+#' @param period_max the maxmium period to include in the transition calculation
+#' @param cluster_labels optional. A vector of cluster assignments
+#'
+#' @return a tidy tibble containing the transition rates (per cluster)
+#' @export
+#'
+#' @seealso \code{\link{plot_transition_matrix}}
+#'
+#' @examples
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
+#'                    labels = mvad.labels, xtstep = 6)
+#' seq_def_tidy <- tidy_sequence_data(mvad.seq)
+#'
+#' trans_tidy <- transition_matrix(seq_def_tidy)
+#'
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_labels <- stats::cutree(cluster_model, k = 5)
+#'
+#' trans_tidy <- transition_matrix(seq_def_tidy, cluster_labels = cluster_labels)
+transition_matrix <- function(seq_def_tidy, period_min = min(seq_def_tidy$sequenchr_seq_id), period_max = max(seq_def_tidy$sequenchr_seq_id), cluster_labels = NULL){
+
+  # TODO: issue here that labels should be comprehensive regardless of period
+
+  # add cluster labels, if exists
+  if (!is.null(cluster_labels)) {
+    seq_def_tidy <- dplyr::left_join(
+      x = seq_def_tidy,
+      y = data.frame(sequenchr_seq_id = 1:length(cluster_labels),
+                     cluster = cluster_labels),
+      by = 'sequenchr_seq_id'
+    )
+  } else {
+    seq_def_tidy$cluster <- 'dummy'
+  }
+
+  # filter to just the periods of interest
+  filtered_data <- seq_def_tidy %>%
+    dplyr::filter(period >= period_min,
+                  period <= period_max) %>%
+    dplyr::mutate(state = as.character(state))
+
+  # calculate the transition rate per cluster
+  cluster_rates <- filtered_data %>%
+    dplyr::group_by(cluster) %>%
+    dplyr::group_split() %>%
+    lapply(X = ., FUN = function(df){
+
+      # add NA filler rows after each group before calculating transition matrix
+      # this prevents end of day looping back to beginning of day for next group
+      df_NA <- df %>%
+        dplyr::group_by(sequenchr_seq_id) %>%
+        dplyr::group_split() %>%
+        lapply(X = ., FUN = function(df){
+          dplyr::add_row(df)
+        }) %>%
+        dplyr::bind_rows()
+
+      # calculate transition matrix
+      n <- nrow(df_NA)
+      TRATE_mat <- base::table(data.frame(previous = df_NA$state[1:(n-1)],
+                                          current = df_NA$state[2:n]))
+      TRATE_mat <- TRATE_mat / sum(TRATE_mat)
+
+      # ensure matrix contains all the states (b/c above filters may remove some)
+      unique_states <- unique(seq_def_tidy$state) %>% as.vector()
+      TRATE_filled <- tidyr::crossing(previous = unique_states, current = unique_states) %>%
+        dplyr::left_join(dplyr::as_tibble(TRATE_mat),
+                         by = c('previous', 'current')) %>%
+        tidyr::replace_na(list(n = 0)) %>%
+        tidyr::pivot_wider(names_from = previous, values_from = n)
+
+      # add cluster name
+      TRATE_filled$cluster <- df$cluster[[1]]
+
+      return(TRATE_filled)
+    }) %>%
+    dplyr::bind_rows()
+
+  # tidy the data
+  TRATE_tidy <- tidyr::pivot_longer(cluster_rates,
+                                    cols = -c('current', 'cluster'),
+                                    names_to = "previous",
+                                    values_to = "n"
+  )
+
+  return(TRATE_tidy)
+}

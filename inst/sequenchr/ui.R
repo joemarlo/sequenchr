@@ -132,7 +132,7 @@ shinyUI(
                 title = 'Matrix',
                 br(),
                 plotOutput(outputId = 'explore_plot_matrix',
-                           height = 700)
+                           height = 750)
               ),
               tabPanel(
                 title = "Chord plot",

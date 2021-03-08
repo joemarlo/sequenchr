@@ -319,30 +319,53 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
 #'
 #' Plots a 'heatmap' of a transition matrix
 #'
-#' @param transition_matrix a transition matrix
+#' @param transition_matrix a transition matrix produced by sequenchr::transition_matrix()
 #'
 #' @return ggplot object
 #' @export
 #'
+#' @seealso \code{\link{transition_matrix}}
+#'
 #' @examples
-#' #TODO
-plot_transition_matrix <- function(transition_matrix){
+#' library(TraMineR)
+#' data(mvad)
+#' seqstatl(mvad[, 17:86])
+#' mvad.alphabet <- c("employment", "FE", "HE", "joblessness", "school",
+#'                    "training")
+#' mvad.labels <- c("employment", "further education", "higher education",
+#'                  "joblessness", "school", "training")
+#' mvad.seq <- seqdef(mvad, 17:86, alphabet = mvad.alphabet,
+#'                    labels = mvad.labels, xtstep = 6)
+#' seq_def_tidy <- tidy_sequence_data(mvad.seq)
+#'
+#' trans_tidy <- transition_matrix(seq_def_tidy)
+#' plot_transition_matrix(trans_tidy)
+#'
+#' dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
+#' cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+#' cluster_labels <- stats::cutree(cluster_model, k = 5)
+#'
+#' trans_tidy <- transition_matrix(seq_def_tidy, cluster_labels = cluster_labels)
+#' plot_transition_matrix(trans_tidy)
+plot_transition_matrix <- function(transition_matrix, n_col_facets = 1){
 
-  # TODO: issue here that labels should be comprehensive regardless of period
-  # TODO: add clustering
+  is_clustered <- length(unique(transition_matrix$cluster)) > 1
 
   # plot it
-  dat_pivoted <- tidyr::pivot_longer(transition_matrix, cols = -current, names_to = "previous", values_to = "n")
-  p <-ggplot2::ggplot(data = dat_pivoted,
-                      ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
-    ggplot2::geom_tile() +
-    ggplot2::geom_text(color = 'grey90') +
-    ggplot2::scale_fill_viridis_c() +
-    ggplot2::labs(title = "Transition matrix",
-         x = "\nFrom state",
-         y = 'To state',
-         fill = 'Transition rate') +
-    ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1))
+  p <- ggplot2::ggplot(data = transition_matrix,
+                       ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
+      ggplot2::geom_tile() +
+      ggplot2::geom_text(color = 'grey90') +
+      ggplot2::scale_fill_viridis_c() +
+      ggplot2::labs(title = "Transition matrix",
+                    x = "\nFrom state",
+                    y = 'To state',
+                    fill = 'Transition rate') +
+      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 35, hjust = 1))
+
+  if (isTRUE(is_clustered)){
+    p <- p + ggplot2::facet_wrap(~cluster, ncol = n_col_facets)
+  }
 
   return(p)
 }

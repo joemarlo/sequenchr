@@ -362,49 +362,36 @@ shinyServer(function(input, output, session) {
   # chord plot --------------------------------------------------------------
 
   # transition matrix
-  transition_matrix <- reactive({
+  transition_matrix_reactive <- reactive({
 
-    # filter the data to the periods specfiied by the input slider
-    # add NA filler rows after each group before calculating transition matrix
-    # this prevents end of day looping back to beginning of day for next group
-    freq_data <- tidy_data %>%
-      dplyr::filter(period >= input$plotting_slider_chord[1],
-                    period <= input$plotting_slider_chord[2]) %>%
-      dplyr::mutate(state = as.character(state)) %>%
-      dplyr::group_by(sequenchr_seq_id) %>%
-      dplyr::group_split() %>%
-      lapply(X = ., FUN = function(df){
-        dplyr::add_row(df, sequenchr_seq_id = NA, state = NA, period = NA)
-      }) %>%
-      dplyr::bind_rows()
+    if (isFALSE(input$plotting_check_cluster)){
+      TRATE_tidy <- transition_matrix(
+        tidy_data,
+        period_min = input$plotting_slider_chord[1],
+        period_max = input$plotting_slider_chord[2],
+        cluster_labels = NULL)
+    } else {
+      TRATE_tidy <- transition_matrix(
+        tidy_data,
+        period_min = input$plotting_slider_chord[1],
+        period_max = input$plotting_slider_chord[2],
+        cluster_labels = label_clusters_reactive())
+    }
 
-    # calculate transition matrix
-    n <- nrow(freq_data)
-    TRATE_mat <- base::table(data.frame(previous = freq_data$state[1:(n-1)],
-                                        current = freq_data$state[2:n]))
-    TRATE_mat <- TRATE_mat / sum(TRATE_mat)
-
-    # ensure matrix contains all the states (b/c above filters may remove some)
-    unique_states <- unique(tidy_data$state) %>% as.vector()
-    TRATE_filled <- tidyr::crossing(previous = unique_states, current = unique_states) %>%
-      dplyr::left_join(dplyr::as_tibble(TRATE_mat),
-                       by = c('previous', 'current')) %>%
-      tidyr::replace_na(list(n = 0)) %>%
-      tidyr::pivot_wider(names_from = previous, values_from = n)
-    TRATE_filled_mat <- as.matrix(TRATE_filled[, -1])
-    rownames(TRATE_filled_mat) <- TRATE_filled[[1]]
-
-    return(list(TRATE_filled, TRATE_filled_mat))
+    return(TRATE_tidy)
   })
 
   # render the transition plot
   output$explore_plot_matrix <- renderPlot({
 
     # get the transition matrix
-    TRATE_mat <- transition_matrix()[[1]]
+    TRATE_mat <- transition_matrix_reactive()
 
     # plot it
-    p <- plot_transition_matrix(TRATE_mat)
+    p <- plot_transition_matrix(
+      TRATE_mat,
+      n_col_facets = input$clustering_slider_facet_ncol
+      )
 
     return(p)
   })
@@ -421,10 +408,17 @@ shinyServer(function(input, output, session) {
     # render the chord plot
     output$explore_plot_chord <- chorddiag::renderChorddiag({
 
+      validate(need(isFALSE(input$plotting_check_cluster),
+                    "Chord plot currently only supported without clustering"))
+
       # get the transition matrix
-      trans_mat <- transition_matrix()
-      freq_data <- trans_mat[[1]]
-      TRATE_mat <- trans_mat[[2]]
+      trans_tidy <- transition_matrix_reactive()
+
+      # convert from tidy df to matrix
+      TRATE_wide <- dplyr::select(trans_tidy, -cluster)
+      TRATE_wide <- tidyr::pivot_wider(TRATE_wide, values_from = 'n', names_from = 'previous')
+      TRATE_mat <- as.matrix(TRATE_wide[,-1])
+      rownames(TRATE_mat) <- TRATE_wide$current
 
       # create the color vector
       states_included <- base::intersect(names(color_mapping), rownames(TRATE_mat))
