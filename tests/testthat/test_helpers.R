@@ -20,7 +20,7 @@ test_that("cluster_stats() output is rectangular", {
   expect_true(inherits(separation_metrics, 'data.frame'))
   expect_equal(nrow(separation_metrics), 4)
   expect_equal(ncol(separation_metrics), 5)
-  expect_equal(colnames(separation_metrics), c('k', 'ch', 'silhouette', 'ch_norm', 'silhouette_norm'))
+  expect_named(separation_metrics, c('k', 'ch', 'silhouette', 'ch_norm', 'silhouette_norm'))
 })
 
 seq_def_tidy <- tidy_sequence_data(mvad.seq)
@@ -28,7 +28,7 @@ test_that("tidy_sequence_data() output is rectangular", {
   expect_true(inherits(seq_def_tidy, 'data.frame'))
   expect_equal(nrow(seq_def_tidy), 49840)
   expect_equal(ncol(seq_def_tidy), 3)
-  expect_equal(colnames(seq_def_tidy), c('sequenchr_seq_id', 'period', 'state'))
+  expect_named(seq_def_tidy, c('sequenchr_seq_id', 'period', 'state'))
 })
 
 entropy <- shannon_entropy(c('A', 'A', 'B', 'C', 'A', 'C'))
@@ -48,5 +48,9 @@ test_that("transition_matrix() output is rectangular", {
   expect_true(inherits(trans_tidy, 'data.frame'))
   expect_equal(nrow(trans_tidy), 180)
   expect_equal(ncol(trans_tidy), 4)
-  expect_equal(colnames(trans_tidy), c('current', 'cluster', 'previous', 'n'))
+  expect_named(trans_tidy, c('current', 'cluster', 'previous', 'n'))
+})
+trans_tidy_sums <- trans_tidy %>% dplyr::group_by(cluster) %>% dplyr::summarize(sum = sum(n)) %>% dplyr::pull(sum)
+test_that("transition_matrix() output sums to one", {
+  expect_equal(trans_tidy_sums, rep(1, 5))
 })
