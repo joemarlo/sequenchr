@@ -8,6 +8,8 @@ plot_transition_matrix(transition_matrix, n_col_facets = 1)
 }
 \arguments{
 \item{transition_matrix}{a transition matrix produced by sequenchr::transition_matrix()}
+
+\item{n_col_facets}{optional. If cluster_labels is provided then the number of facet columns}
 }
 \value{
 ggplot object

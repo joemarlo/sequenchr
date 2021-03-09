@@ -30,6 +30,7 @@ VignetteBuilder: knitr
 Suggests: 
     rmarkdown,
     knitr,
-    fastcluster
+    fastcluster,
+    testthat
 Enhances: 
     chorddiag

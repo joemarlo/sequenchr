@@ -318,6 +318,7 @@ plot_dendrogram <- function(cluster_model, k, h = 100){
 #' Plots a 'heatmap' of a transition matrix
 #'
 #' @param transition_matrix a transition matrix produced by sequenchr::transition_matrix()
+#' @param n_col_facets optional. If cluster_labels is provided then the number of facet columns
 #'
 #' @return ggplot object
 #' @export

@@ -81,7 +81,7 @@ vignette('sequenchr')
 
 ## Development to-do
 
--   Write unit testing (!!!)
--   Review and refine function documentation
+-   Review function examples, argument description, and function
+    description
 -   Replace `fpc` with custom function?
 -   Improve the covariates plotting
