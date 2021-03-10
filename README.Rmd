@@ -64,7 +64,7 @@ plot_sequence_index(seq_def_tidy)
 
 # cluster the data
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 cluster_labels <- label_clusters(cluster_model, k = 5)
 
 # plot the sequence index by cluster

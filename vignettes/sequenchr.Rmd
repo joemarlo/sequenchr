@@ -121,7 +121,7 @@ Often the clusters produced by dendrograms have different labels than those prod
 ```{r dendrogram, fig.height=3, fig.width=6}
 # cluster the data
 dist_matrix <- TraMineR::seqdist(seqdata = mvad.seq, method = "DHD")
-cluster_model <- fastcluster::hclust(d = as.dist(dist_matrix), method = 'ward.D2')
+cluster_model <- hclust(d = as.dist(dist_matrix), method = 'ward.D2')
 
 # plot the dendrogram
 plot_dendrogram(cluster_model, k = 5)
