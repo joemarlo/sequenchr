@@ -125,7 +125,7 @@ shinyServer(function(input, output, session) {
       p <- dplyr::tibble(cluster = label_clusters_reactive(),
                          sequenchr_seq_id = 1:length(label_clusters_reactive())) %>%
         dplyr::right_join(tidy_cov_data, by = 'sequenchr_seq_id') %>%
-        ggplot2::ggplot(ggplot2::aes(x = state, group = name)) +
+        ggplot2::ggplot(ggplot2::aes(x = value, group = name)) +
         ggplot2::geom_density() +
         ggplot2::facet_wrap( ~ cluster,
                              scales = 'free_y',

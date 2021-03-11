@@ -64,7 +64,7 @@ launch_sequenchr(mvad.seq, covariates_data)
 
 The functions that power the sequenchr app can also be used directly. All plotting functions start with sequenchr::plot_* and most require a tidy dataframe created from the TraMineR object. 
 
-The tidy dataframe is created via `sequenchr::tidy_sequench_data` and then is passed to the `sequenchr::plot_* functions`.
+The tidy dataframe is created via `sequenchr::tidy_sequence_data` and then is passed to the `sequenchr::plot_* functions`.
 
 ```{r function usage, fig.height=4, fig.width=6}
 # tidy the data
@@ -76,7 +76,7 @@ plot_sequence_index(seq_def_tidy)
 
 ### Modifying plots
 
-Plots are standard ggplot2 objects and can be customized using ggplot2 syntax. For example, the theme, scales, and labels can be modified by calling their respective functions on `sequenchr::plot_*` output, concatenated with `+`.
+Plots are standard ggplot2 objects and can be customized using ggplot2 syntax. For example, the theme, scales, and labels can be modified by calling their respective functions on `sequenchr::plot_*` output, concatenated with '`+`'.
 
 ```{r ggplot usage, fig.height=4, fig.width=6}
 library(ggplot2)
@@ -95,7 +95,7 @@ p +
 
 ### Managing identical legends across plots
 
-Sequence analysis results are often presented in intricate plots requiring, at times, significant cognitive burden on inexperienced readers. Maintaining identical color schemes across your various plots can help reduce the burden. Each of the `sequenchr::plot_*` functions includes a `color_mapping` argument that specifies each state's color ensuring identical legends across yours plots.
+Sequence analysis results are often presented in intricate plots requiring, at times, significant cognitive burden on inexperienced readers. Maintaining identical color schemes across your various plots can help reduce the burden. Many of the `sequenchr::plot_*` functions includes a `color_mapping` argument that specifies each state's color ensuring identical legends across your plots.
 
 The `viridis` color palette (accessed through the package of the same name) is recommended for its advantages for colorblind readers and greyscale printing. See more [here](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html).
 
