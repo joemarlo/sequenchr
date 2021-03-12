@@ -209,7 +209,7 @@ shinyServer(function(input, output, session) {
                     ticks = FALSE),
         br(),
         actionButton(inputId = 'clustering_button_separation',
-                     label = 'Calculate separation metrics')
+                     label = 'Calculate validity statistics')
       )
     })
 
@@ -276,7 +276,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$clustering_button_separation, {
 
     # message to console
-    message('1/2 Calculating separation metrics')
+    message('1/2 Calculating cluster validity statistics')
 
     # compute cluster stats
     store$separation_metrics <- cluster_stats(
@@ -288,14 +288,14 @@ shinyServer(function(input, output, session) {
 
     # remove and add silhouette plot tab
     removeTab(inputId = 'plotting_tabs',
-              target = 'Separation plot')
+              target = 'Cluster validity')
     insertTab(
       inputId = 'plotting_tabs',
       target = 'Dendrogram',
       position = 'after',
       select = TRUE,
       tab = tabPanel(
-        title = 'Separation plot',
+        title = 'Cluster validity',
         br(),
         plotOutput(outputId = 'clustering_plot_separation',
                    height = 600)
@@ -303,7 +303,7 @@ shinyServer(function(input, output, session) {
     )
 
     # message to console
-    message('2/2 Separation metrics finished')
+    message('2/2 Cluster validity finished')
   })
 
   # plot the silhouette width
@@ -315,13 +315,16 @@ shinyServer(function(input, output, session) {
 
     # plot it
     p <- store$separation_metrics %>%
-      dplyr::rename(`CH index` = ch_norm,
+      dplyr::rename(`Calinski and Harabasz index` = ch_norm,
                     `Silhouette width` = silhouette_norm) %>%
-      tidyr::pivot_longer(cols = c("CH index", "Silhouette width")) %>%
+      tidyr::pivot_longer(cols = c("Calinski and Harabasz index", "Silhouette width")) %>%
       ggplot2::ggplot(ggplot2::aes(x = k, y = value, group = name, color = name)) +
       ggplot2::geom_line(size = 1.2) +
-      ggplot2::labs(title = "Cluster seperation measured by Calinski-Harabasz index and silhouette width",
-                    subtitle = 'Optimal clusters: minimum CH, maximum silhouette width',
+      ggplot2::scale_x_continuous(breaks = seq(isolate(input$clustering_slider_separation_range[[1]]),
+                                               isolate(input$clustering_slider_separation_range[[2]]),
+                                               by = 1)) +
+      ggplot2::labs(title = "Cluster validity statistics",
+                    subtitle = 'Maximum values == optimal number of clusters',
                     x = 'n clusters',
                     y = 'Normalized index',
                     color = NULL) +

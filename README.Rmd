@@ -93,3 +93,4 @@ vignette('sequenchr')
 - Review function examples, argument description, and function description
 - Replace `fpc` with custom function?
 - Improve the covariates plotting
+- Add loading modals
