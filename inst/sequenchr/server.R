@@ -117,19 +117,18 @@ shinyServer(function(input, output, session) {
 
       # plot without clustering
       p <- tidy_cov_data %>%
-        ggplot2::ggplot(ggplot2::aes(x = state, group = name)) +
-        ggplot2::geom_density()
+        ggplot2::ggplot(ggplot2::aes(x = value)) +
+        ggplot2::geom_density() +
+        ggplot2::facet_wrap(~name, scales = 'free')
 
     } else {
       # plot with clustering
       p <- dplyr::tibble(cluster = label_clusters_reactive(),
                          sequenchr_seq_id = 1:length(label_clusters_reactive())) %>%
         dplyr::right_join(tidy_cov_data, by = 'sequenchr_seq_id') %>%
-        ggplot2::ggplot(ggplot2::aes(x = value, group = name)) +
+        ggplot2::ggplot(ggplot2::aes(x = value, group = cluster, color = cluster)) +
         ggplot2::geom_density() +
-        ggplot2::facet_wrap( ~ cluster,
-                             scales = 'free_y',
-                             ncol = input$clustering_slider_facet_ncol)
+        ggplot2::facet_wrap(~name, scales = 'free')
     }
 
     return(p)
@@ -158,7 +157,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$clustering_button_cluster, {
 
     # message to console
-    message(paste0("1. Computing distance matrix with method ",
+    message(paste0("1/3 Computing distance matrix with method ",
                    input$clustering_select_distanceMethod))
 
     # compute the distance matrix
@@ -186,7 +185,7 @@ shinyServer(function(input, output, session) {
     }
 
     # message to console
-    message("2. Clustering the data")
+    message("2/3 Clustering the data")
 
     # cluster the data
     store$cluster_model <- hclust(
@@ -195,7 +194,7 @@ shinyServer(function(input, output, session) {
     )
 
     # message to console
-    message("3. Clustering finished")
+    message("3/3 Clustering finished")
 
     # render the clustering UI
     output$clustering_UI <- renderUI({
@@ -277,7 +276,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$clustering_button_separation, {
 
     # message to console
-    message('1. Calculating separation metrics')
+    message('1/2 Calculating separation metrics')
 
     # compute cluster stats
     store$separation_metrics <- cluster_stats(
@@ -304,7 +303,7 @@ shinyServer(function(input, output, session) {
     )
 
     # message to console
-    message('Separation metrics finished')
+    message('2/2 Separation metrics finished')
   })
 
   # plot the silhouette width
