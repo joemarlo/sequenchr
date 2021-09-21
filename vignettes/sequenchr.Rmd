@@ -20,7 +20,7 @@ Sequenchr is a sequence analysis tool for applied researchers. It is designed to
 
 ## Launching the sequenchr Shiny app
 
-Sequenchr is built on top of the powerful sequench analysis package TraMineR which provides a number of helpful functions to manipulate and analyze sequence data.
+Sequenchr is built on top of the powerful sequence analysis package TraMineR which provides a number of helpful functions to manipulate and analyze sequence data.
 
 The sequenchr Shiny app requires a TraMineR object created from `TraMineR::seqdef`. For more information on using TraMineR, see [http://traminer.unige.ch/](http://traminer.unige.ch/). Once the TraMineR object is created, calling `sequenchr::launch_sequechnr` will launch the Shiny app in a new browser window.
 
@@ -48,7 +48,7 @@ launch_sequenchr(sequence_data = mvad.seq)
 <img src="screenshot.png" width=80%>
 </p>
 
-The sequenchr app displays plotting of the state sequences and hierarchical clustering. Distance methods, clustering methods, and seperation metrics can be specified on the left side. Cluster labels can also be downloaded as a .csv if you wish to use them directly within R.
+The sequenchr app displays plotting of the state sequences and hierarchical clustering. Distance methods, clustering methods, and separation metrics can be specified on the left side. Cluster labels can also be downloaded as a .csv if you wish to use them directly within R.
 
 TODO: refine covariates plotting
 Passing a dataframe to the optional argument `covariates_data` within `sequenchr::launch_sequenchr` will visualize the covariates and split them based on cluster membership. The covariates data is matched to the `sequence_data` via row position so both contain the same number of rows.

@@ -149,7 +149,7 @@ label_clusters <- function(.model, k){
   cluster_ns <- base::table(cluster_sorted)
   cluster_labels <- factor(
     cluster_sorted,
-    labels = paste("Cluster", 1:k, " | n = ", cluster_ns)
+    labels = paste0("Cluster ", 1:k, "  |  n = ", cluster_ns)
   )
 
   return(cluster_labels)

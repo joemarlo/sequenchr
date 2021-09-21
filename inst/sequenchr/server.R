@@ -313,16 +313,21 @@ shinyServer(function(input, output, session) {
     validate(need(is(store$separation_metrics, 'data.frame'),
                   'Calculate the silhouette width first'))
 
+    # set breaks
+    x_brks <- seq(isolate(input$clustering_slider_separation_range[[1]]),
+                isolate(input$clustering_slider_separation_range[[2]]),
+                by = 1)
+
     # plot it
     p <- store$separation_metrics %>%
       dplyr::rename(`Calinski and Harabasz index` = ch_norm,
                     `Silhouette width` = silhouette_norm) %>%
       tidyr::pivot_longer(cols = c("Calinski and Harabasz index", "Silhouette width")) %>%
-      ggplot2::ggplot(ggplot2::aes(x = k, y = value, group = name, color = name)) +
+      ggplot2::ggplot(ggplot2::aes(x = k, y = value, group = name, color = name, fill = name)) +
       ggplot2::geom_line(size = 1.2) +
-      ggplot2::scale_x_continuous(breaks = seq(isolate(input$clustering_slider_separation_range[[1]]),
-                                               isolate(input$clustering_slider_separation_range[[2]]),
-                                               by = 1)) +
+      ggplot2::geom_point(size = 5, pch = 21, color = 'white', stroke = 1.3) +
+      ggplot2::scale_x_continuous(breaks = x_brks) +
+      ggplot2::scale_fill_discrete(name = NULL) +
       ggplot2::labs(title = "Cluster validity statistics",
                     subtitle = 'Maximum values == optimal number of clusters',
                     x = 'n clusters',

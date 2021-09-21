@@ -20,7 +20,7 @@ You can install the latest version of sequenchr via:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("joemarlo/sequenchr", build_vignettes = TRUE)
+devtools::install_github("joemarlo/sequenchr")
 ```
 
 ## Example
@@ -76,6 +76,7 @@ plot_sequence_index(seq_def_tidy, cluster_labels = cluster_labels) +
 See the vignette for more information:
 
 ``` r
+devtools::install_github("joemarlo/sequenchr", build_vignettes = TRUE)
 vignette('sequenchr')
 ```
 
@@ -86,3 +87,5 @@ vignette('sequenchr')
 -   Replace `fpc` with custom function?
 -   Improve the covariates plotting
 -   Add loading modals
+-   How to handle data with missing values
+-   Plots crash when color palette needs to be &gt;11 values

@@ -354,7 +354,7 @@ plot_transition_matrix <- function(transition_matrix, n_col_facets = 1){
   p <- ggplot2::ggplot(data = transition_matrix,
                        ggplot2::aes(x = previous, y = current, fill = n, label = round(n, 3))) +
       ggplot2::geom_tile() +
-      ggplot2::geom_text(color = 'grey90') +
+      ggplot2::geom_text(color = 'grey90') + # TODO: remove text when clustering
       ggplot2::scale_fill_viridis_c() +
       ggplot2::labs(title = "Transition matrix",
                     x = "\nFrom state",
