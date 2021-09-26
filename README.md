@@ -4,6 +4,8 @@
 # sequenchr
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/joemarlo/sequenchr/workflows/R-CMD-check/badge.svg)](https://github.com/joemarlo/sequenchr/actions)
 <!-- badges: end -->
 
 Sequence analysis tool for applied researchers. Designed for faster
